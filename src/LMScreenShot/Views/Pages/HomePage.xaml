@@ -5,7 +5,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
-      Title="Trang chủ">
+      Title="{DynamicResource Loc_Nav_Home}">
 
     <Grid Margin="28,20,28,20">
         <Grid.RowDefinitions>
@@ -15,7 +15,7 @@
 
         <!-- Page Title chuẩn như Tab About -->
         <TextBlock Grid.Row="0"
-                   Text="Trang chủ" 
+                   Text="{DynamicResource Loc_Nav_Home}" 
                    FontSize="24" 
                    FontWeight="Medium" 
                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
@@ -63,7 +63,7 @@
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
                                        HorizontalAlignment="Center"
                                        Margin="0,0,0,6" />
-                            <TextBlock Text="Ảnh chụp mới" 
+                            <TextBlock Text="{DynamicResource Loc_Home_NewCapture}" 
                                        FontSize="13" 
                                        FontWeight="Medium" 
                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
@@ -86,18 +86,19 @@
                             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
                             BorderThickness="1" 
                             CornerRadius="8" 
-                            Padding="14,14">
-                        <DockPanel LastChildFill="False">
-                            <TextBlock Text="Lưu ảnh ngay sau khi chụp" 
-                                       FontSize="12" 
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
-                                       VerticalAlignment="Center"
-                                       TextWrapping="Wrap"
-                                       MaxWidth="120" />
+                            Padding="16,14">
+                        <DockPanel>
                             <ui:ToggleSwitch x:Name="ToggleAutoSave" 
                                              IsChecked="True" 
                                              DockPanel.Dock="Right" 
-                                             VerticalAlignment="Center" />
+                                             VerticalAlignment="Center"
+                                             Margin="12,0,0,0" 
+                                             Click="ToggleAutoSave_Click" />
+                            <TextBlock Text="{DynamicResource Loc_Home_AutoSave}" 
+                                       FontSize="13" 
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap" />
                         </DockPanel>
                     </Border>
 
@@ -107,18 +108,19 @@
                             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
                             BorderThickness="1" 
                             CornerRadius="8" 
-                            Padding="14,14">
-                        <DockPanel LastChildFill="False">
-                            <TextBlock Text="Tự động sao chép vào bảng tạm" 
-                                       FontSize="12" 
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
-                                       VerticalAlignment="Center"
-                                       TextWrapping="Wrap"
-                                       MaxWidth="120" />
+                            Padding="16,14">
+                        <DockPanel>
                             <ui:ToggleSwitch x:Name="ToggleAutoClipboard" 
                                              IsChecked="True" 
                                              DockPanel.Dock="Right" 
-                                             VerticalAlignment="Center" />
+                                             VerticalAlignment="Center"
+                                             Margin="12,0,0,0" 
+                                             Click="ToggleAutoClipboard_Click" />
+                            <TextBlock Text="{DynamicResource Loc_Home_AutoClipboard}" 
+                                       FontSize="13" 
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap" />
                         </DockPanel>
                     </Border>
                 </Grid>

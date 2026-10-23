@@ -5,12 +5,12 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
-      Title="Thông tin">
+      Title="{DynamicResource Loc_About_Title}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="28,20,28,28">
             <!-- 1. Page Title -->
-            <TextBlock Text="Thông tin" 
+            <TextBlock Text="{DynamicResource Loc_About_Title}" 
                        FontSize="24" 
                        FontWeight="Medium" 
                        Margin="0,0,0,24" 
@@ -22,11 +22,11 @@
                        FontWeight="Medium" 
                        Margin="0,0,0,8" 
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-            <TextBlock Text="Phiên bản 1.0.0" 
+            <TextBlock Text="{DynamicResource Loc_About_Version}" 
                        FontSize="13" 
                        Margin="0,0,0,8" 
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-            <TextBlock Text="Bản dựng 20261024" 
+            <TextBlock Text="{DynamicResource Loc_About_Build}" 
                        FontSize="13" 
                        Margin="0,0,0,16" 
                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -35,20 +35,20 @@
                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 
             <!-- 3. Section Title (Liên kết) -->
-            <TextBlock Text="Liên kết" 
+            <TextBlock Text="{DynamicResource Loc_About_Links}" 
                        FontSize="14" 
                        FontWeight="Medium" 
                        Margin="0,24,0,8" 
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             
             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                <ui:HyperlinkButton Content="Dự án LMScreenShot trên GitHub" 
+                <ui:HyperlinkButton Content="{DynamicResource Loc_About_GitHub}" 
                                     NavigateUri="https://github.com" 
                                     Margin="0,0,0,4" />
             </StackPanel>
 
             <!-- 4. Section Title (Thư viện bên thứ ba) -->
-            <TextBlock Text="Thư viện bên thứ ba" 
+            <TextBlock Text="{DynamicResource Loc_About_ThirdParty}" 
                        FontSize="14" 
                        FontWeight="Medium" 
                        Margin="0,24,0,8" 

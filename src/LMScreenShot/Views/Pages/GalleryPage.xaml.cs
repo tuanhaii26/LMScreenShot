@@ -12,19 +12,27 @@ public partial class GalleryPage : Page
 {
     private string _screenshotDirectory = string.Empty;
 
+    private CancellationTokenSource? _loadCts;
+
     public GalleryPage()
     {
         InitializeComponent();
         Loaded += GalleryPage_Loaded;
+        Unloaded += GalleryPage_Unloaded;
     }
 
     private void GalleryPage_Loaded(object sender, RoutedEventArgs e)
     {
-        _screenshotDirectory = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-            "Screenshots");
+        _screenshotDirectory = LMScreenShot.Core.Config.AppConfig.Instance.ResolvedSavePath;
 
-        LoadGallery();
+        _loadCts?.Cancel();
+        _loadCts = new CancellationTokenSource();
+        _ = LoadGalleryAsync(_loadCts.Token);
+    }
+
+    private void GalleryPage_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _loadCts?.Cancel();
     }
 
     private void ScrollGallery_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -62,104 +70,156 @@ public partial class GalleryPage : Page
         }
     }
 
-    private void LoadGallery()
+    private async Task LoadGalleryAsync(CancellationToken token)
     {
         PanelGallery.Children.Clear();
 
         if (!Directory.Exists(_screenshotDirectory)) return;
 
-        // Hiển thị đầy đủ tất cả ảnh trong thư mục (không giới hạn 16 ảnh)
-        var files = Directory.GetFiles(_screenshotDirectory, "*.png")
-            .OrderByDescending(f => File.GetCreationTime(f))
-            .ToList();
-
-        foreach (var file in files)
+        // 1. Quét danh sách file ở Background Thread (không chặn luồng UI)
+        var files = await Task.Run(() =>
         {
-            var border = new System.Windows.Controls.Border
-            {
-                Width = 220,
-                Height = 124,
-                Margin = new Thickness(6),
-                CornerRadius = new CornerRadius(8),
-                BorderThickness = new Thickness(1),
-                ClipToBounds = true,
-                Cursor = Cursors.Hand,
-                ToolTip = "Bấm đúp để mở • Giữ và kéo thả sang cửa sổ khác để đính kèm hoặc sao chép"
-            };
-            border.SetResourceReference(System.Windows.Controls.Border.BackgroundProperty, "CardBackgroundFillColorSecondaryBrush");
-            border.SetResourceReference(System.Windows.Controls.Border.BorderBrushProperty, "CardStrokeColorDefaultBrush");
-
-            border.MouseEnter += (s, e) =>
-            {
-                border.SetResourceReference(System.Windows.Controls.Border.BorderBrushProperty, "SystemAccentColorPrimaryBrush");
-            };
-            border.MouseLeave += (s, e) =>
-            {
-                border.SetResourceReference(System.Windows.Controls.Border.BorderBrushProperty, "CardStrokeColorDefaultBrush");
-            };
-
-            var img = new System.Windows.Controls.Image
-            {
-                Stretch = Stretch.UniformToFill
-            };
-
             try
             {
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.UriSource = new Uri(file);
-                bitmap.DecodePixelWidth = 220;
-                bitmap.EndInit();
-                bitmap.Freeze();
-                img.Source = bitmap;
+                return Directory.GetFiles(_screenshotDirectory, "*.png")
+                    .Select(f => new FileInfo(f))
+                    // Đảm bảo 100% ảnh mới nhất luôn đứng đầu:
+                    // 1) Theo thời gian mới nhất (Max giữa LastWriteTime và CreationTime)
+                    // 2) Kết hợp tên file Screenshot_yyyyMMdd_HHmmss.png giảm dần
+                    .OrderByDescending(f => Math.Max(f.LastWriteTimeUtc.Ticks, f.CreationTimeUtc.Ticks))
+                    .ThenByDescending(f => f.Name)
+                    .Select(f => f.FullName)
+                    .ToList();
             }
-            catch { }
-
-            border.Child = img;
-
-            Point dragStartPoint = new();
-
-            // Ghi nhận vị trí bắt đầu nhấn chuột
-            border.PreviewMouseLeftButtonDown += (s, e) =>
+            catch
             {
-                dragStartPoint = e.GetPosition(null);
+                return new List<string>();
+            }
+        }, token);
 
-                // 1. Cơ chế Bấm đúp (Double-click) để mở ảnh
-                if (e.ClickCount == 2)
+        if (token.IsCancellationRequested || files.Count == 0) return;
+
+        // 2. Tải cuốn chiếu theo lô (Batch Progressive Loading):
+        // Lô đầu tiên tải ngay 12 ảnh (~50ms) để lấp đầy màn hình tức thì, các lô sau nạp tiếp theo
+        int processed = 0;
+        while (processed < files.Count)
+        {
+            if (token.IsCancellationRequested) return;
+
+            int batchSize = processed == 0 ? 12 : 16;
+            var batchFiles = files.Skip(processed).Take(batchSize).ToList();
+            processed += batchFiles.Count;
+
+            // Giải mã ảnh nén ở luồng nền (Task.Run) và Freeze() để gửi sang UI thread
+            var batchItems = await Task.Run(() =>
+            {
+                var list = new List<(string FilePath, BitmapSource Bitmap)>();
+                foreach (var file in batchFiles)
                 {
+                    if (token.IsCancellationRequested) break;
                     try
                     {
-                        Process.Start(new ProcessStartInfo(file) { UseShellExecute = true });
+                        var bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.UriSource = new Uri(file);
+                        bitmap.DecodePixelWidth = 260; // Thumbnail nhẹ, sắc nét
+                        bitmap.EndInit();
+                        bitmap.Freeze(); // Cho phép chia sẻ qua thread an toàn
+                        list.Add((file, bitmap));
                     }
                     catch { }
-                    e.Handled = true;
                 }
-            };
+                return list;
+            }, token);
 
-            // 2. Cơ chế Kéo thả (Drag & Drop) sang Desktop, File Explorer hoặc các app khác (Zalo, Discord, Web...)
-            border.PreviewMouseMove += (s, e) =>
+            if (token.IsCancellationRequested) return;
+
+            // Thêm các thẻ ảnh vào giao diện
+            foreach (var item in batchItems)
             {
-                if (e.LeftButton == MouseButtonState.Pressed)
-                {
-                    Point currentPoint = e.GetPosition(null);
-                    Vector diff = dragStartPoint - currentPoint;
+                var border = CreateThumbnailCard(item.FilePath, item.Bitmap);
+                PanelGallery.Children.Add(border);
+            }
 
-                    if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                        Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
-                    {
-                        var dataObject = new DataObject();
-                        // Format FileDrop: Cho phép kéo thả vào Desktop, Explorer, Browser, Discord, Telegram...
-                        dataObject.SetData(DataFormats.FileDrop, new string[] { file });
+            AdjustThumbnailSizes();
 
-                        // Kích hoạt kéo thả OLE chuẩn Windows
-                        DragDrop.DoDragDrop(border, dataObject, DragDropEffects.Copy);
-                    }
-                }
-            };
-
-            PanelGallery.Children.Add(border);
+            // Nhường CPU để UI cập nhật mượt mà 60/120 FPS
+            await Task.Yield();
         }
+    }
+
+    private System.Windows.Controls.Border CreateThumbnailCard(string file, BitmapSource bitmap)
+    {
+        string fileName = Path.GetFileName(file);
+
+        var border = new System.Windows.Controls.Border
+        {
+            Width = 220,
+            Height = 124,
+            Margin = new Thickness(6),
+            CornerRadius = new CornerRadius(8),
+            BorderThickness = new Thickness(1),
+            ClipToBounds = true,
+            Cursor = Cursors.Hand,
+            ToolTip = $"{fileName}\n• {LMScreenShot.Core.Localization.LocalizationManager.GetString("Loc_Gallery_Tooltip")}"
+        };
+        border.SetResourceReference(System.Windows.Controls.Border.BackgroundProperty, "CardBackgroundFillColorSecondaryBrush");
+        border.SetResourceReference(System.Windows.Controls.Border.BorderBrushProperty, "CardStrokeColorDefaultBrush");
+
+        border.MouseEnter += (s, e) =>
+        {
+            border.SetResourceReference(System.Windows.Controls.Border.BorderBrushProperty, "SystemAccentColorPrimaryBrush");
+        };
+        border.MouseLeave += (s, e) =>
+        {
+            border.SetResourceReference(System.Windows.Controls.Border.BorderBrushProperty, "CardStrokeColorDefaultBrush");
+        };
+
+        var img = new System.Windows.Controls.Image
+        {
+            Stretch = Stretch.UniformToFill,
+            Source = bitmap
+        };
+        border.Child = img;
+
+        Point dragStartPoint = new();
+
+        // 1. Cơ chế Bấm đúp (Double-click) để mở ảnh
+        border.PreviewMouseLeftButtonDown += (s, e) =>
+        {
+            dragStartPoint = e.GetPosition(null);
+
+            if (e.ClickCount == 2)
+            {
+                try
+                {
+                    Process.Start(new ProcessStartInfo(file) { UseShellExecute = true });
+                }
+                catch { }
+                e.Handled = true;
+            }
+        };
+
+        // 2. Cơ chế Kéo thả (Drag & Drop) sang Desktop, File Explorer hoặc các app khác
+        border.PreviewMouseMove += (s, e) =>
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Point currentPoint = e.GetPosition(null);
+                Vector diff = dragStartPoint - currentPoint;
+
+                if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
+                {
+                    var dataObject = new DataObject();
+                    dataObject.SetData(DataFormats.FileDrop, new string[] { file });
+                    DragDrop.DoDragDrop(border, dataObject, DragDropEffects.Copy);
+                }
+            }
+        };
+
+        return border;
     }
 
     private void BtnOpenFolder_Click(object sender, RoutedEventArgs e)

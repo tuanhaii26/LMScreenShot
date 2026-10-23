@@ -5,7 +5,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
-      Title="Ảnh chụp">
+      Title="{DynamicResource Loc_Gallery_Title}">
 
     <Grid Margin="28,20,28,24">
         <Grid.RowDefinitions>
@@ -20,18 +20,18 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0">
-                <TextBlock Text="Ảnh chụp" 
+                <TextBlock Text="{DynamicResource Loc_Gallery_Title}" 
                            FontSize="24" 
                            FontWeight="Medium" 
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
                            Margin="0,0,0,8" />
-                <TextBlock Text="Có thể kéo thả ảnh tới bất kì đâu cũng được!" 
+                <TextBlock Text="{DynamicResource Loc_Gallery_Subtitle}" 
                            FontSize="16" 
                            FontWeight="Medium" 
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             </StackPanel>
 
-            <ui:Button Content="📁 Mở thư mục ảnh" 
+            <ui:Button Content="{DynamicResource Loc_Gallery_OpenFolder}" 
                        Grid.Column="1"
                        Appearance="Primary" 
                        VerticalAlignment="Center" 

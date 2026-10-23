@@ -22,13 +22,19 @@ public partial class HomePage : Page
     {
         InitializeComponent();
         Loaded += HomePage_Loaded;
+        LMScreenShot.Core.Localization.LocalizationManager.LanguageChanged += () =>
+        {
+            RefreshMonitors();
+        };
     }
 
     private void HomePage_Loaded(object sender, RoutedEventArgs e)
     {
-        _screenshotDirectory = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-            "Screenshots");
+        var config = LMScreenShot.Core.Config.AppConfig.Instance;
+        ToggleAutoSave.IsChecked = config.AutoSave == 1;
+        ToggleAutoClipboard.IsChecked = config.AutoClipboard == 1;
+
+        _screenshotDirectory = config.ResolvedSavePath;
 
         if (!Directory.Exists(_screenshotDirectory))
         {
@@ -38,10 +44,22 @@ public partial class HomePage : Page
         RefreshMonitors();
     }
 
+    private void ToggleAutoSave_Click(object sender, RoutedEventArgs e)
+    {
+        LMScreenShot.Core.Config.AppConfig.Instance.AutoSave = ToggleAutoSave.IsChecked == true ? 1 : 0;
+        LMScreenShot.Core.Config.AppConfig.Instance.Save();
+    }
+
+    private void ToggleAutoClipboard_Click(object sender, RoutedEventArgs e)
+    {
+        LMScreenShot.Core.Config.AppConfig.Instance.AutoClipboard = ToggleAutoClipboard.IsChecked == true ? 1 : 0;
+        LMScreenShot.Core.Config.AppConfig.Instance.Save();
+    }
+
     public void RefreshMonitors()
     {
         _monitors = ScreenCapturer.GetMonitors();
-        TxtMonitorSummary.Text = $"Đã phát hiện {_monitors.Count} màn hình. Nhấn vào màn hình để chụp nhanh.";
+        TxtMonitorSummary.Text = LMScreenShot.Core.Localization.LocalizationManager.GetString("Loc_Home_DetectedScreens", _monitors.Count);
         RenderTopologyMap();
     }
 
@@ -134,8 +152,8 @@ public partial class HomePage : Page
             FontSize = Math.Max(20, Math.Min(34, height * 0.36)),
             FontWeight = FontWeights.Medium,
             Foreground = textBrush,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+            VerticalAlignment = System.Windows.VerticalAlignment.Center
         };
 
         border.Child = numberText;
@@ -202,8 +220,8 @@ public partial class HomePage : Page
 
             var capturedBitmap = ScreenCapturer.CaptureMonitor(targetMonitor);
 
-            // Hiện lại cửa sổ và đưa lên Foreground
-            if (window != null)
+            // Hiện lại cửa sổ và đưa lên Foreground nếu trước đó đang mở
+            if (window != null && !wasHidden)
             {
                 window.Show();
                 window.Activate();
@@ -223,16 +241,17 @@ public partial class HomePage : Page
 
             string statusMsg;
             if (ToggleAutoClipboard.IsChecked == true && !string.IsNullOrEmpty(savedPath))
-                statusMsg = "Đã lưu vào thư mục và sao chép vào bảng tạm!";
+                statusMsg = LMScreenShot.Core.Localization.LocalizationManager.GetString("Loc_Toast_SavedAndCopied");
             else if (!string.IsNullOrEmpty(savedPath))
-                statusMsg = "Đã lưu ảnh vào thư mục Screenshots!";
+                statusMsg = LMScreenShot.Core.Localization.LocalizationManager.GetString("Loc_Toast_SavedOnly");
             else if (ToggleAutoClipboard.IsChecked == true)
-                statusMsg = "Đã sao chép ảnh vào bảng tạm!";
+                statusMsg = LMScreenShot.Core.Localization.LocalizationManager.GetString("Loc_Toast_CopiedOnly");
             else
                 statusMsg = $"{capturedBitmap.PixelWidth}×{capturedBitmap.PixelHeight} px";
 
-            ShowOnScreenNotification(targetMonitor, $"Đã chụp {targetMonitor.DisplayTitle}", statusMsg);
-            ShowSnackbarNotification($"Đã chụp {targetMonitor.DisplayTitle}", statusMsg, isSuccess: true);
+            string capturedTitle = LMScreenShot.Core.Localization.LocalizationManager.GetString("Loc_Toast_Captured", targetMonitor.DisplayTitle);
+            ShowOnScreenNotification(targetMonitor, capturedTitle, statusMsg);
+            ShowSnackbarNotification(capturedTitle, statusMsg, isSuccess: true);
         }
         catch (Exception ex)
         {
@@ -241,7 +260,7 @@ public partial class HomePage : Page
                 window.Show();
                 window.Activate();
             }
-            ShowSnackbarNotification("Lỗi chụp màn hình", ex.Message, isSuccess: false);
+            ShowSnackbarNotification(LMScreenShot.Core.Localization.LocalizationManager.GetString("Loc_Toast_CaptureError"), ex.Message, isSuccess: false);
         }
     }
 

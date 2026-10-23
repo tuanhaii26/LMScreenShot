@@ -173,7 +173,7 @@ public partial class ScreenOverlayWindow : Window
         }
     }
 
-    private void ScreenOverlayWindow_KeyDown(object sender, KeyEventArgs e)
+    private void ScreenOverlayWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (Mode != OverlayMode.Capture) return;
 

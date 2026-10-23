@@ -5,35 +5,125 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
-      Title="Cài đặt">
+      Title="{DynamicResource Loc_Settings_Title}">
 
-    <Grid Margin="28,20,28,24">
-        <StackPanel>
-            <TextBlock Text="Cài đặt" 
+    <Page.Resources>
+        <!-- Style Card cài đặt chuẩn 1:1 theo Lenovo Legion Toolkit (LLT) -->
+        <Style x:Key="LltSettingCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="18,14" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,20,28,28">
+            <!-- Page Title -->
+            <TextBlock Text="{DynamicResource Loc_Settings_Title}" 
                        FontSize="24" 
                        FontWeight="Medium" 
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
-                       Margin="0,0,0,24" />
-            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
-                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
-                    BorderThickness="1" 
-                    CornerRadius="10" 
-                    Padding="20">
-                <StackPanel>
-                    <DockPanel Margin="0,0,0,12">
-                        <TextBlock Text="Thư mục lưu ảnh mặc định" FontSize="14" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
-                        <ui:Button Content="Thay đổi..." Appearance="Secondary" DockPanel.Dock="Right" HorizontalAlignment="Right" Click="BtnChangeFolder_Click" />
-                    </DockPanel>
-                    <TextBlock x:Name="TxtFolderPath" Text="Pictures/Screenshots" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
+                       Margin="0,0,0,20" />
 
-                    <Separator Background="{DynamicResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,16" />
+            <!-- Card 1: Thư mục lưu ảnh mặc định -->
+            <Border Style="{StaticResource LltSettingCardStyle}">
+                <DockPanel>
+                    <ui:Button Content="{DynamicResource Loc_Settings_ChangeFolder}" 
+                               Appearance="Secondary" 
+                               DockPanel.Dock="Right" 
+                               VerticalAlignment="Center" 
+                               Click="BtnChangeFolder_Click" />
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock Text="{DynamicResource Loc_Settings_DefaultFolder}" 
+                                   FontSize="13.5" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock x:Name="TxtFolderPath" 
+                                   Text="Pictures/Screenshots" 
+                                   FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                   Margin="0,3,0,0" 
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
 
-                    <DockPanel Margin="0,0,0,12">
-                        <TextBlock Text="Chế độ giao diện (Dark / Light)" FontSize="14" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
-                        <ui:ToggleSwitch x:Name="ToggleDarkMode" IsChecked="True" DockPanel.Dock="Right" HorizontalAlignment="Right" Click="ToggleDarkMode_Click" />
-                    </DockPanel>
-                </StackPanel>
+            <!-- Card 2: Thu nhỏ xuống khay hệ thống (Minimize to Tray) -->
+            <Border Style="{StaticResource LltSettingCardStyle}">
+                <DockPanel>
+                    <ui:ToggleSwitch x:Name="ToggleMinimizeToTray" 
+                                     IsChecked="True" 
+                                     DockPanel.Dock="Right" 
+                                     VerticalAlignment="Center" 
+                                     Click="ToggleMinimizeToTray_Click" />
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock Text="{DynamicResource Loc_Settings_MinimizeToTray}" 
+                                   FontSize="13.5" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="{DynamicResource Loc_Settings_MinimizeToTrayDesc}" 
+                                   FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                   Margin="0,3,0,0" 
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Card 3: Chế độ giao diện (Dark / Light) -->
+            <Border Style="{StaticResource LltSettingCardStyle}">
+                <DockPanel>
+                    <ui:ToggleSwitch x:Name="ToggleDarkMode" 
+                                     IsChecked="True" 
+                                     DockPanel.Dock="Right" 
+                                     VerticalAlignment="Center" 
+                                     Click="ToggleDarkMode_Click" />
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock Text="{DynamicResource Loc_Settings_Theme}" 
+                                   FontSize="13.5" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="{DynamicResource Loc_Settings_ThemeDesc}" 
+                                   FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                   Margin="0,3,0,0" 
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Card 4: Ngôn ngữ hiển thị (Language) -->
+            <Border Style="{StaticResource LltSettingCardStyle}">
+                <DockPanel>
+                    <ComboBox x:Name="ComboLanguage" 
+                              Width="140" 
+                              DockPanel.Dock="Right" 
+                              VerticalAlignment="Center" 
+                              SelectionChanged="ComboLanguage_SelectionChanged">
+                        <ComboBoxItem Content="Tiếng Việt" Tag="vi-VN" />
+                        <ComboBoxItem Content="English" Tag="en-US" />
+                    </ComboBox>
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock Text="{DynamicResource Loc_Settings_Language}" 
+                                   FontSize="13.5" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="{DynamicResource Loc_Settings_LanguageDesc}" 
+                                   FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                   Margin="0,3,0,0" 
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
             </Border>
         </StackPanel>
-    </Grid>
+    </ScrollViewer>
 </Page>

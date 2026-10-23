@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
+                <ResourceDictionary Source="Resources/Languages/Strings.vi-VN.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

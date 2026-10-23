@@ -1,13 +1,18 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using LMScreenShot.Core.Capture;
+using LMScreenShot.Core.Config;
 using LMScreenShot.Core.Hotkey;
+using LMScreenShot.Core.Localization;
 using LMScreenShot.Core.Native;
+using LMScreenShot.Core.Tray;
 using LMScreenShot.Views.Pages;
 using LMScreenShot.Views.Windows;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace LMScreenShot;
@@ -21,21 +26,64 @@ public partial class MainWindow : FluentWindow
     private readonly AboutPage _aboutPage = new();
 
     private readonly GlobalHotkeyManager _hotkeyManager = new();
+    private readonly TrayIconManager _trayManager = new();
     private readonly List<ScreenOverlayWindow> _activeOverlays = new();
+
+    private bool _isExplicitExit = false;
 
     public MainWindow()
     {
         InitializeComponent();
+        RestoreWindowDimensions();
         Loaded += MainWindow_Loaded;
         Closed += MainWindow_Closed;
+        SizeChanged += MainWindow_SizeChanged;
+    }
+
+    private void RestoreWindowDimensions()
+    {
+        var config = AppConfig.Instance;
+        if (config.WindowWidth >= MinWidth)
+            Width = config.WindowWidth;
+        if (config.WindowHeight >= MinHeight)
+            Height = config.WindowHeight;
+
+        if (config.IsMaximized == 1)
+            WindowState = WindowState.Maximized;
+    }
+
+    private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (WindowState == WindowState.Normal)
+        {
+            if (ActualWidth >= MinWidth) AppConfig.Instance.WindowWidth = ActualWidth;
+            if (ActualHeight >= MinHeight) AppConfig.Instance.WindowHeight = ActualHeight;
+            AppConfig.Instance.IsMaximized = 0;
+            AppConfig.Instance.Save();
+        }
+        else if (WindowState == WindowState.Maximized)
+        {
+            AppConfig.Instance.IsMaximized = 1;
+            AppConfig.Instance.Save();
+        }
     }
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        // Điều hướng ban đầu đến Trang chủ
+        // 1. Áp dụng cài đặt đã lưu (Theme, System Accent Color & Ngôn ngữ)
+        var config = AppConfig.Instance;
+        var theme = config.IsDarkMode == 1 ? ApplicationTheme.Dark : ApplicationTheme.Light;
+        ApplicationThemeManager.Apply(theme);
+        LMScreenShot.Core.Theme.AccentColorHelper.Apply(theme);
+        LocalizationManager.SetLanguage(config.Lang == "en" ? "en-US" : "vi-VN");
+
+        // 2. Điều hướng ban đầu đến Trang chủ
         RootFrame.Navigate(_homePage);
 
-        // Đăng ký phím tắt toàn hệ thống
+        // 3. Khởi tạo khay hệ thống (System Tray)
+        _trayManager.Initialize(this);
+
+        // 4. Đăng ký phím tắt toàn hệ thống
         var helper = new WindowInteropHelper(this);
         _hotkeyManager.Register(helper.Handle, ScreenCapturer.GetMonitors().Count);
         _hotkeyManager.CaptureOverlayRequested += OpenCaptureOverlay;
@@ -47,16 +95,84 @@ public partial class MainWindow : FluentWindow
     {
         CloseAllOverlays();
         _hotkeyManager.Dispose();
+        _trayManager.Dispose();
+    }
+
+    protected override void OnClosing(CancelEventArgs e)
+    {
+        if (WindowState == WindowState.Normal)
+        {
+            if (ActualWidth >= MinWidth) AppConfig.Instance.WindowWidth = ActualWidth;
+            if (ActualHeight >= MinHeight) AppConfig.Instance.WindowHeight = ActualHeight;
+            AppConfig.Instance.IsMaximized = 0;
+            AppConfig.Instance.Save();
+        }
+        else if (WindowState == WindowState.Maximized)
+        {
+            AppConfig.Instance.IsMaximized = 1;
+            AppConfig.Instance.Save();
+        }
+
+        if (!_isExplicitExit && AppConfig.Instance.MinimizeToTray == 1)
+        {
+            e.Cancel = true;
+            this.Hide();
+            return;
+        }
+
+        base.OnClosing(e);
+    }
+
+    protected override void OnStateChanged(EventArgs e)
+    {
+        if (WindowState == WindowState.Minimized && AppConfig.Instance.MinimizeToTray == 1)
+        {
+            this.Hide();
+        }
+        else if (WindowState == WindowState.Maximized)
+        {
+            AppConfig.Instance.IsMaximized = 1;
+            AppConfig.Instance.Save();
+        }
+        else if (WindowState == WindowState.Normal)
+        {
+            AppConfig.Instance.IsMaximized = 0;
+            AppConfig.Instance.Save();
+        }
+
+        base.OnStateChanged(e);
+    }
+
+    public void ShowAndRestore()
+    {
+        this.Show();
+        if (this.WindowState == WindowState.Minimized)
+        {
+            this.WindowState = WindowState.Normal;
+        }
+        this.Activate();
+        this.Focus();
+    }
+
+    public void ExitApplication()
+    {
+        _isExplicitExit = true;
+        _trayManager.Dispose();
+        CloseAllOverlays();
+        _hotkeyManager.Dispose();
+        Application.Current.Shutdown();
     }
 
     /// <summary>
-    /// Mở giao diện Overlay Chụp tương tác (Ctrl + Shift + X hoặc bấm nút Ảnh chụp mới)
+    /// Mở giao diện Overlay Chụp tương tác (Ctrl + Shift + X hoặc bấm chuột trái vào Tray Icon hoặc nút Ảnh chụp mới)
     /// </summary>
     public void OpenCaptureOverlay()
     {
         CloseAllOverlays();
 
-        // Ẩn hoàn toàn cửa sổ chính
+        bool wasVisible = this.Visibility == Visibility.Visible && this.WindowState != WindowState.Minimized;
+
+        // Ẩn tạm thời cửa sổ chính nếu đang mở
         this.Hide();
 
         var monitors = ScreenCapturer.GetMonitors();
@@ -83,8 +199,10 @@ public partial class MainWindow : FluentWindow
             overlay.CancelTriggered += () =>
             {
                 CloseAllOverlays();
-                this.Show();
-                this.Activate();
+                if (wasVisible)
+                {
+                    ShowAndRestore();
+                }
             };
 
             _activeOverlays.Add(overlay);
@@ -141,7 +259,7 @@ public partial class MainWindow : FluentWindow
             {
                 From = 16,
                 To = 0,
-                Duration = TimeSpan.FromMilliseconds(200),
+                Duration = TimeSpan.FromMilliseconds(300),
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
 
@@ -149,7 +267,7 @@ public partial class MainWindow : FluentWindow
             {
                 From = 0,
                 To = 1,
-                Duration = TimeSpan.FromMilliseconds(200),
+                Duration = TimeSpan.FromMilliseconds(300),
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
 

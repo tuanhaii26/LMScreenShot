@@ -210,4 +210,63 @@ public static class NativeMethods
 
     [DllImport("user32.dll")]
     public static extern bool SetWindowPos(nint hWnd, nint hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+    [DllImport("user32.dll")]
+    public static extern bool SetForegroundWindow(nint hWnd);
+
+    // Shell NotifyIcon APIs
+    public const int NIM_ADD = 0x00000000;
+    public const int NIM_MODIFY = 0x00000001;
+    public const int NIM_DELETE = 0x00000002;
+
+    public const int NIF_MESSAGE = 0x00000001;
+    public const int NIF_ICON = 0x00000002;
+    public const int NIF_TIP = 0x00000004;
+
+    public const int WM_TRAYICON = 0x8000 + 100;
+
+    public const int WM_LBUTTONUP = 0x0202;
+    public const int WM_RBUTTONUP = 0x0205;
+    public const int WM_LBUTTONDBLCLK = 0x0203;
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public struct NOTIFYICONDATA
+    {
+        public int cbSize;
+        public nint hWnd;
+        public int uID;
+        public int uFlags;
+        public int uCallbackMessage;
+        public nint hIcon;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+        public string szTip;
+        public int dwState;
+        public int dwStateMask;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string szInfo;
+        public int uTimeoutOrVersion;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+        public string szInfoTitle;
+        public int dwInfoFlags;
+        public Guid guidItem;
+        public nint hBalloonIcon;
+    }
+
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+    public static extern bool Shell_NotifyIcon(int dwMessage, ref NOTIFYICONDATA lpData);
+
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+    public static extern uint ExtractIconEx(string lpszFile, int nIconIndex, out nint phiconLarge, out nint phiconSmall, uint nIcons);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern nint LoadIcon(nint hInstance, nint lpIconName);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    public static extern nint LoadImage(nint hInst, string name, uint type, int cx, int cy, uint fuLoad);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern bool DestroyIcon(nint hIcon);
+
+    [DllImport("dwmapi.dll", PreserveSig = false)]
+    public static extern void DwmGetColorizationColor(out uint pcrColorization, [MarshalAs(UnmanagedType.Bool)] out bool pfOpaqueBlend);
 }

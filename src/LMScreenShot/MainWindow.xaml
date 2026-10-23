@@ -10,7 +10,8 @@
         MinHeight="500" MinWidth="960"
         WindowStartupLocation="CenterScreen"
         ExtendsContentIntoTitleBar="True"
-        WindowBackdropType="Mica">
+        WindowBackdropType="Mica"
+        Icon="Resources/app.ico">
 
     <Window.Resources>
         <!-- Style Navigation Item chuẩn 1:1 theo Lenovo Legion Toolkit -->
@@ -166,20 +167,20 @@
                 <StackPanel Grid.Row="0">
                     <RadioButton Style="{StaticResource LltNavigationItemStyle}"
                                  Content="{x:Static ui:SymbolRegular.Home24}"
-                                 Tag="Trang chủ"
+                                 Tag="{DynamicResource Loc_Nav_Home}"
                                  GroupName="NavGroup"
                                  IsChecked="True"
                                  Click="NavHome_Click" />
 
                     <RadioButton Style="{StaticResource LltNavigationItemStyle}"
                                  Content="{x:Static ui:SymbolRegular.Camera24}"
-                                 Tag="Ảnh chụp"
+                                 Tag="{DynamicResource Loc_Nav_Gallery}"
                                  GroupName="NavGroup"
                                  Click="NavGallery_Click" />
 
                     <RadioButton Style="{StaticResource LltNavigationItemStyle}"
                                  Content="{x:Static ui:SymbolRegular.Flash24}"
-                                 Tag="Phím tắt"
+                                 Tag="{DynamicResource Loc_Nav_Shortcuts}"
                                  GroupName="NavGroup"
                                  Click="NavShortcuts_Click" />
                 </StackPanel>
@@ -188,13 +189,13 @@
                 <StackPanel Grid.Row="1">
                     <RadioButton Style="{StaticResource LltNavigationItemStyle}"
                                  Content="{x:Static ui:SymbolRegular.Settings24}"
-                                 Tag="Cài đặt"
+                                 Tag="{DynamicResource Loc_Nav_Settings}"
                                  GroupName="NavGroup"
                                  Click="NavSettings_Click" />
 
                     <RadioButton Style="{StaticResource LltNavigationItemStyle}"
                                  Content="{x:Static ui:SymbolRegular.Info24}"
-                                 Tag="Thông tin"
+                                 Tag="{DynamicResource Loc_Nav_About}"
                                  GroupName="NavGroup"
                                  Click="NavAbout_Click" />
                 </StackPanel>

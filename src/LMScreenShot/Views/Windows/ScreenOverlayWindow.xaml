@@ -46,7 +46,7 @@
                 CornerRadius="6" 
                 Padding="16,8">
             <TextBlock x:Name="TxtTip" 
-                       Text="Click chuột bất kỳ đâu hoặc bấm phím số tương ứng để chụp | Esc để huỷ" 
+                       Text="{DynamicResource Loc_Overlay_Tip}" 
                        FontSize="13" 
                        Foreground="White" />
         </Border>

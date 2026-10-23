@@ -7,10 +7,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
     <RootNamespace>LMScreenShot</RootNamespace>
     <AssemblyName>LMScreenShot</AssemblyName>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app.ico" />
+    <None Update="Resources\app.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="WPF-UI" Version="4.0.0" />

@@ -26,7 +26,7 @@ public class MonitorItem
     // Chuỗi định dạng hiển thị y hệt mockup: "Laptop Display 1920x1080@144Hz 125%"
     public string FormattedDetail => $"{FriendlyName} {Width}x{Height}@{RefreshRate}Hz {ScalePercent}%";
 
-    public string DisplayTitle => $"Màn hình {DisplayNumber} {(IsPrimary ? "(Chính)" : "")}";
+    public string DisplayTitle => $"{Localization.LocalizationManager.GetString("Loc_Monitor_Prefix")}{DisplayNumber}{(IsPrimary ? Localization.LocalizationManager.GetString("Loc_Monitor_Primary") : "")}";
 
     public string BoundsSummary => $"Vị trí: ({Left}, {Top}) | Kích thước: {Width}x{Height} px";
 
