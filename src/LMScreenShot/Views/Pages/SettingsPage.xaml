@@ -1,0 +1,39 @@
+<Page x:Class="LMScreenShot.Views.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      Title="Cài đặt">
+
+    <Grid Margin="28,20,28,24">
+        <StackPanel>
+            <TextBlock Text="Cài đặt" 
+                       FontSize="24" 
+                       FontWeight="Medium" 
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                       Margin="0,0,0,24" />
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                    BorderThickness="1" 
+                    CornerRadius="10" 
+                    Padding="20">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,12">
+                        <TextBlock Text="Thư mục lưu ảnh mặc định" FontSize="14" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                        <ui:Button Content="Thay đổi..." Appearance="Secondary" DockPanel.Dock="Right" HorizontalAlignment="Right" Click="BtnChangeFolder_Click" />
+                    </DockPanel>
+                    <TextBlock x:Name="TxtFolderPath" Text="Pictures/Screenshots" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
+
+                    <Separator Background="{DynamicResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,16" />
+
+                    <DockPanel Margin="0,0,0,12">
+                        <TextBlock Text="Chế độ giao diện (Dark / Light)" FontSize="14" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                        <ui:ToggleSwitch x:Name="ToggleDarkMode" IsChecked="True" DockPanel.Dock="Right" HorizontalAlignment="Right" Click="ToggleDarkMode_Click" />
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Page>

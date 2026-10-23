@@ -1,0 +1,48 @@
+<Page x:Class="LMScreenShot.Views.Pages.ShortcutsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      Title="Phím tắt">
+
+    <Grid Margin="28,20,28,24">
+        <StackPanel>
+            <TextBlock Text="Phím tắt" 
+                       FontSize="24" 
+                       FontWeight="Medium" 
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                       Margin="0,0,0,24" />
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                    BorderThickness="1" 
+                    CornerRadius="10" 
+                    Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Các phím tắt mặc định toàn hệ thống:" FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,16" />
+                    
+                    <DockPanel Margin="0,6">
+                        <TextBlock Text="Ctrl + Shift + X" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
+                        <TextBlock Text="Mở giao diện chụp tương tác (click bất kỳ đâu trên màn hình hoặc ấn phím số 1..9 để chụp)" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                    </DockPanel>
+
+                    <DockPanel Margin="0,6">
+                        <TextBlock Text="Ctrl + Shift + `" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
+                        <TextBlock Text="Hiện số thứ tự nhận diện màn hình (Identify) không làm phiền (tự tắt sau 2.5s)" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                    </DockPanel>
+
+                    <DockPanel Margin="0,6">
+                        <TextBlock Text="Ctrl + Shift + 1..9" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
+                        <TextBlock Text="Chụp tức thì màn hình tương ứng từ bất kỳ đâu trên Windows" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                    </DockPanel>
+
+                    <DockPanel Margin="0,6">
+                        <TextBlock Text="Esc" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
+                        <TextBlock Text="Đóng / Huỷ giao diện chụp tương tác và quay lại cửa sổ chính" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Page>

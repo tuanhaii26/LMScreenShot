@@ -1,0 +1,55 @@
+<Page x:Class="LMScreenShot.Views.Pages.GalleryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      Title="Ảnh chụp">
+
+    <Grid Margin="28,20,28,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Ảnh chụp" 
+                           FontSize="24" 
+                           FontWeight="Medium" 
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                           Margin="0,0,0,8" />
+                <TextBlock Text="Có thể kéo thả ảnh tới bất kì đâu cũng được!" 
+                           FontSize="16" 
+                           FontWeight="Medium" 
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <ui:Button Content="📁 Mở thư mục ảnh" 
+                       Grid.Column="1"
+                       Appearance="Primary" 
+                       VerticalAlignment="Center" 
+                       Click="BtnOpenFolder_Click" />
+        </Grid>
+
+        <Border Grid.Row="1" 
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="10" 
+                Padding="16">
+            <ScrollViewer x:Name="ScrollGallery" 
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          SizeChanged="ScrollGallery_SizeChanged">
+                <WrapPanel x:Name="PanelGallery" />
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Page>
