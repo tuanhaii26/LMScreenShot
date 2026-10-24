@@ -68,6 +68,16 @@ public partial class MainWindow : FluentWindow
         }
     }
 
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+        if (Environment.GetCommandLineArgs().Any(a => a.Equals("--minimized", StringComparison.OrdinalIgnoreCase)))
+        {
+            WindowState = WindowState.Minimized;
+            Hide();
+        }
+    }
+
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         // 1. Áp dụng cài đặt đã lưu (Theme, System Accent Color & Ngôn ngữ)
@@ -89,6 +99,13 @@ public partial class MainWindow : FluentWindow
         _hotkeyManager.CaptureOverlayRequested += OpenCaptureOverlay;
         _hotkeyManager.IdentifyOverlayRequested += OpenIdentifyOverlay;
         _hotkeyManager.InstantCaptureRequested += HandleInstantCapture;
+
+        // 5. Kiểm tra nếu khởi động thu nhỏ
+        if (Environment.GetCommandLineArgs().Any(a => a.Equals("--minimized", StringComparison.OrdinalIgnoreCase)))
+        {
+            WindowState = WindowState.Minimized;
+            Hide();
+        }
     }
 
     private void MainWindow_Closed(object? sender, EventArgs e)
@@ -113,11 +130,19 @@ public partial class MainWindow : FluentWindow
             AppConfig.Instance.Save();
         }
 
-        if (!_isExplicitExit && AppConfig.Instance.MinimizeToTray == 1)
+        if (!_isExplicitExit)
         {
-            e.Cancel = true;
-            this.Hide();
-            return;
+            if (AppConfig.Instance.MinimizeOnClose == 1)
+            {
+                e.Cancel = true;
+                this.Hide();
+                return;
+            }
+            else
+            {
+                ExitApplication();
+                return;
+            }
         }
 
         base.OnClosing(e);
@@ -316,4 +341,225 @@ public partial class MainWindow : FluentWindow
             RootFrame.Navigate(_aboutPage);
         }
     }
+
+    #region Shortcut Configuration Dialog
+
+    public void ShowShortcutsDialog()
+    {
+        var config = AppConfig.Instance;
+
+        // 1. Chụp tương tác
+        ChkOverlayCtrl.IsChecked = (config.CaptureModifiers & NativeMethods.MOD_CONTROL) != 0;
+        ChkOverlayShift.IsChecked = (config.CaptureModifiers & NativeMethods.MOD_SHIFT) != 0;
+        ChkOverlayAlt.IsChecked = (config.CaptureModifiers & NativeMethods.MOD_ALT) != 0;
+        ChkOverlayWin.IsChecked = (config.CaptureModifiers & NativeMethods.MOD_WIN) != 0;
+        TxtOverlayKey.Tag = config.CaptureKey;
+        TxtOverlayKey.Text = AppConfig.FormatKey(config.CaptureKey);
+
+        // 2. Nhận diện màn hình
+        ChkIdentifyCtrl.IsChecked = (config.IdentifyModifiers & NativeMethods.MOD_CONTROL) != 0;
+        ChkIdentifyShift.IsChecked = (config.IdentifyModifiers & NativeMethods.MOD_SHIFT) != 0;
+        ChkIdentifyAlt.IsChecked = (config.IdentifyModifiers & NativeMethods.MOD_ALT) != 0;
+        ChkIdentifyWin.IsChecked = (config.IdentifyModifiers & NativeMethods.MOD_WIN) != 0;
+        TxtIdentifyKey.Tag = config.IdentifyKey;
+        TxtIdentifyKey.Text = AppConfig.FormatKey(config.IdentifyKey);
+
+        // 3. Chụp tức thì từng màn hình (Phím số 1..9 cố định, chỉ đổi modifiers)
+        ChkInstantCtrl.IsChecked = (config.InstantModifiers & NativeMethods.MOD_CONTROL) != 0;
+        ChkInstantShift.IsChecked = (config.InstantModifiers & NativeMethods.MOD_SHIFT) != 0;
+        ChkInstantAlt.IsChecked = (config.InstantModifiers & NativeMethods.MOD_ALT) != 0;
+        ChkInstantWin.IsChecked = (config.InstantModifiers & NativeMethods.MOD_WIN) != 0;
+
+        TxtDialogError.Visibility = Visibility.Collapsed;
+        OverlayDialogContainer.Visibility = Visibility.Visible;
+    }
+
+    public void CloseShortcutsDialog()
+    {
+        OverlayDialogContainer.Visibility = Visibility.Collapsed;
+    }
+
+    private void OverlayDialogContainer_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        CloseShortcutsDialog();
+    }
+
+    private void DialogCardBorder_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private void BtnDialogCancel_Click(object sender, RoutedEventArgs e)
+    {
+        CloseShortcutsDialog();
+    }
+
+    private void HotkeyField_Changed(object? sender, RoutedEventArgs? e)
+    {
+        if (TxtDialogError != null)
+        {
+            TxtDialogError.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void KeyTextBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.TextBox tb)
+        {
+            tb.Text = "...";
+            tb.SetResourceReference(System.Windows.Controls.Border.BorderBrushProperty, "SystemAccentColorPrimaryBrush");
+        }
+    }
+
+    private void KeyTextBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.TextBox tb)
+        {
+            tb.ClearValue(System.Windows.Controls.Border.BorderBrushProperty);
+            if (tb.Tag is uint vk)
+            {
+                tb.Text = AppConfig.FormatKey(vk);
+            }
+        }
+    }
+
+    private void KeyTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (sender is not System.Windows.Controls.TextBox tb) return;
+
+        var key = e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key;
+
+        // Bỏ qua các phím bổ trợ thuần tuý khi nhấn riêng lẻ
+        if (key is System.Windows.Input.Key.LeftCtrl or System.Windows.Input.Key.RightCtrl or
+                   System.Windows.Input.Key.LeftShift or System.Windows.Input.Key.RightShift or
+                   System.Windows.Input.Key.LeftAlt or System.Windows.Input.Key.RightAlt or
+                   System.Windows.Input.Key.LWin or System.Windows.Input.Key.RWin)
+        {
+            e.Handled = true;
+            return;
+        }
+
+        if (key == System.Windows.Input.Key.Escape)
+        {
+            if (tb.Tag is uint oldVk) tb.Text = AppConfig.FormatKey(oldVk);
+            System.Windows.Input.Keyboard.ClearFocus();
+            e.Handled = true;
+            return;
+        }
+
+        int vk = System.Windows.Input.KeyInterop.VirtualKeyFromKey(key);
+        if (vk > 0)
+        {
+            // Chặn phím số 0..9 trên bàn phím chính (0x30..0x39) và numpad (0x60..0x69)
+            if ((vk >= 0x30 && vk <= 0x39) || (vk >= 0x60 && vk <= 0x69))
+            {
+                if (TxtDialogError != null)
+                {
+                    TxtDialogError.Text = LocalizationManager.GetString("Loc_Dialog_ErrorNoNumberKeys");
+                    TxtDialogError.Visibility = Visibility.Visible;
+                }
+                if (tb.Tag is uint oldVk)
+                {
+                    tb.Text = AppConfig.FormatKey(oldVk);
+                }
+                e.Handled = true;
+                return;
+            }
+
+            tb.Tag = (uint)vk;
+            tb.Text = AppConfig.FormatKey((uint)vk);
+            if (TxtDialogError != null) TxtDialogError.Visibility = Visibility.Collapsed;
+            System.Windows.Input.Keyboard.ClearFocus();
+            e.Handled = true;
+        }
+    }
+
+    private void BtnDialogReset_Click(object sender, RoutedEventArgs e)
+    {
+        // Mặc định: Ctrl + Shift + X, Ctrl + Shift + ~, Ctrl + Shift + 1..9
+        ChkOverlayCtrl.IsChecked = true;
+        ChkOverlayShift.IsChecked = true;
+        ChkOverlayAlt.IsChecked = false;
+        ChkOverlayWin.IsChecked = false;
+        TxtOverlayKey.Tag = (uint)0x58;
+        TxtOverlayKey.Text = AppConfig.FormatKey(0x58);
+
+        ChkIdentifyCtrl.IsChecked = true;
+        ChkIdentifyShift.IsChecked = true;
+        ChkIdentifyAlt.IsChecked = false;
+        ChkIdentifyWin.IsChecked = false;
+        TxtIdentifyKey.Tag = (uint)0xC0;
+        TxtIdentifyKey.Text = AppConfig.FormatKey(0xC0);
+
+        ChkInstantCtrl.IsChecked = true;
+        ChkInstantShift.IsChecked = true;
+        ChkInstantAlt.IsChecked = false;
+        ChkInstantWin.IsChecked = false;
+
+        TxtDialogError.Visibility = Visibility.Collapsed;
+    }
+
+    private void BtnDialogSave_Click(object sender, RoutedEventArgs e)
+    {
+        uint overlayMods = GetModifiersFromCheckboxes(ChkOverlayCtrl, ChkOverlayShift, ChkOverlayAlt, ChkOverlayWin);
+        uint overlayKey = TxtOverlayKey.Tag is uint ok ? ok : (uint)0x58;
+
+        uint identifyMods = GetModifiersFromCheckboxes(ChkIdentifyCtrl, ChkIdentifyShift, ChkIdentifyAlt, ChkIdentifyWin);
+        uint identifyKey = TxtIdentifyKey.Tag is uint ik ? ik : (uint)0xC0;
+
+        uint instantMods = GetModifiersFromCheckboxes(ChkInstantCtrl, ChkInstantShift, ChkInstantAlt, ChkInstantWin);
+
+        // Kiểm tra hợp lệ: Bắt buộc phải có ít nhất 1 phím bổ trợ
+        if (overlayMods == 0 || identifyMods == 0 || instantMods == 0)
+        {
+            TxtDialogError.Text = LocalizationManager.GetString("Loc_Dialog_ErrorNoModifier");
+            TxtDialogError.Visibility = Visibility.Visible;
+            return;
+        }
+
+        // Kiểm tra không được chọn phím số cho Overlay hoặc Identify
+        if ((overlayKey >= 0x30 && overlayKey <= 0x39) || (overlayKey >= 0x60 && overlayKey <= 0x69) ||
+            (identifyKey >= 0x30 && identifyKey <= 0x39) || (identifyKey >= 0x60 && identifyKey <= 0x69))
+        {
+            TxtDialogError.Text = LocalizationManager.GetString("Loc_Dialog_ErrorNoNumberKeys");
+            TxtDialogError.Visibility = Visibility.Visible;
+            return;
+        }
+
+        // Kiểm tra xung đột giữa Overlay và Identify
+        if (overlayMods == identifyMods && overlayKey == identifyKey)
+        {
+            TxtDialogError.Text = LocalizationManager.GetString("Loc_Dialog_ErrorConflict");
+            TxtDialogError.Visibility = Visibility.Visible;
+            return;
+        }
+
+        var config = AppConfig.Instance;
+        config.CaptureModifiers = overlayMods;
+        config.CaptureKey = overlayKey;
+        config.IdentifyModifiers = identifyMods;
+        config.IdentifyKey = identifyKey;
+        config.InstantModifiers = instantMods;
+        config.Save();
+
+        // Đăng ký lại Hotkeys toàn hệ thống ngay lập tức
+        _hotkeyManager.ReRegister(ScreenCapturer.GetMonitors().Count);
+
+        // Cập nhật tab Phím tắt
+        _shortcutsPage.RefreshShortcuts();
+
+        CloseShortcutsDialog();
+    }
+
+    private static uint GetModifiersFromCheckboxes(System.Windows.Controls.CheckBox ctrl, System.Windows.Controls.CheckBox shift, System.Windows.Controls.CheckBox alt, System.Windows.Controls.CheckBox win)
+    {
+        uint mods = 0;
+        if (ctrl.IsChecked == true) mods |= NativeMethods.MOD_CONTROL;
+        if (shift.IsChecked == true) mods |= NativeMethods.MOD_SHIFT;
+        if (alt.IsChecked == true) mods |= NativeMethods.MOD_ALT;
+        if (win.IsChecked == true) mods |= NativeMethods.MOD_WIN;
+        return mods;
+    }
+
+    #endregion
 }

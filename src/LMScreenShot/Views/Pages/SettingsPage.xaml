@@ -4,6 +4,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:behaviors="clr-namespace:LMScreenShot.Core.Behaviors"
       mc:Ignorable="d"
       Title="{DynamicResource Loc_Settings_Title}">
 
@@ -24,7 +25,7 @@
         </Style>
     </Page.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" behaviors:SmoothScrollBehavior.IsEnabled="True">
         <StackPanel Margin="28,20,28,28">
             <!-- Page Title -->
             <TextBlock Text="{DynamicResource Loc_Settings_Title}" 
@@ -70,6 +71,54 @@
                                    FontWeight="SemiBold" 
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         <TextBlock Text="{DynamicResource Loc_Settings_MinimizeToTrayDesc}" 
+                                   FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                   Margin="0,3,0,0" 
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Card 3: Thu nhỏ khi đóng cửa sổ (Minimize on Close) -->
+            <Border Style="{StaticResource LltSettingCardStyle}">
+                <DockPanel>
+                    <ui:ToggleSwitch x:Name="ToggleMinimizeOnClose" 
+                                     IsChecked="False" 
+                                     DockPanel.Dock="Right" 
+                                     VerticalAlignment="Center" 
+                                     Click="ToggleMinimizeOnClose_Click" />
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock Text="{DynamicResource Loc_Settings_MinimizeOnClose}" 
+                                   FontSize="13.5" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="{DynamicResource Loc_Settings_MinimizeOnCloseDesc}" 
+                                   FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                   Margin="0,3,0,0" 
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Card 4: Khởi động cùng máy tính (Start with Windows) -->
+            <Border Style="{StaticResource LltSettingCardStyle}">
+                <DockPanel>
+                    <ComboBox x:Name="ComboStartup" 
+                              Width="150" 
+                              DockPanel.Dock="Right" 
+                              VerticalAlignment="Center" 
+                              SelectionChanged="ComboStartup_SelectionChanged">
+                        <ComboBoxItem Content="{DynamicResource Loc_Settings_StartupOff}" Tag="0" />
+                        <ComboBoxItem Content="{DynamicResource Loc_Settings_StartupOn}" Tag="1" />
+                        <ComboBoxItem Content="{DynamicResource Loc_Settings_StartupMinimized}" Tag="2" />
+                    </ComboBox>
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock Text="{DynamicResource Loc_Settings_Startup}" 
+                                   FontSize="13.5" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="{DynamicResource Loc_Settings_StartupDesc}" 
                                    FontSize="12" 
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
                                    Margin="0,3,0,0" 

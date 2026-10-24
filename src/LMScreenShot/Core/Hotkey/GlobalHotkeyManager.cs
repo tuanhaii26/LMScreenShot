@@ -1,4 +1,5 @@
 using System.Windows.Interop;
+using LMScreenShot.Core.Config;
 using LMScreenShot.Core.Native;
 
 namespace LMScreenShot.Core.Hotkey;
@@ -12,6 +13,7 @@ public class GlobalHotkeyManager : IDisposable
     private nint _hWnd = nint.Zero;
     private HwndSource? _source;
     private readonly List<int> _registeredIds = new();
+    private int _lastMonitorCount = 9;
 
     public event Action? CaptureOverlayRequested;
     public event Action? IdentifyOverlayRequested;
@@ -22,36 +24,51 @@ public class GlobalHotkeyManager : IDisposable
         Unregister();
 
         _hWnd = hWnd;
+        _lastMonitorCount = monitorCount;
         if (_hWnd == nint.Zero) return;
 
         _source = HwndSource.FromHwnd(_hWnd);
         _source?.AddHook(HwndHook);
 
-        uint modifiers = NativeMethods.MOD_CONTROL | NativeMethods.MOD_SHIFT | NativeMethods.MOD_NOREPEAT;
+        var config = AppConfig.Instance;
 
-        // 1. Ctrl + Shift + X: Mở giao diện Overlay Chụp tương tác
-        if (NativeMethods.RegisterHotKey(_hWnd, HOTKEY_CAPTURE_OVERLAY, modifiers, (uint)NativeMethods.VK_X))
+        // 1. Phím tắt chụp tương tác
+        uint captureMods = config.CaptureModifiers | NativeMethods.MOD_NOREPEAT;
+        uint captureKey = config.CaptureKey;
+        if (NativeMethods.RegisterHotKey(_hWnd, HOTKEY_CAPTURE_OVERLAY, captureMods, captureKey))
         {
             _registeredIds.Add(HOTKEY_CAPTURE_OVERLAY);
         }
 
-        // 2. Ctrl + Shift + ` : Nhận diện màn hình (Identify)
-        if (NativeMethods.RegisterHotKey(_hWnd, HOTKEY_IDENTIFY_OVERLAY, modifiers, (uint)NativeMethods.VK_OEM_3))
+        // 2. Phím tắt nhận diện màn hình (Identify)
+        uint identifyMods = config.IdentifyModifiers | NativeMethods.MOD_NOREPEAT;
+        uint identifyKey = config.IdentifyKey;
+        if (NativeMethods.RegisterHotKey(_hWnd, HOTKEY_IDENTIFY_OVERLAY, identifyMods, identifyKey))
         {
             _registeredIds.Add(HOTKEY_IDENTIFY_OVERLAY);
         }
 
-        // 3. Ctrl + Shift + 1..N: Chụp tức thì màn hình tương ứng
+        // 3. Phím tắt chụp tức thì màn hình (Giữ nguyên phím số 1..N, chỉ đổi modifiers)
+        uint instantMods = config.InstantModifiers | NativeMethods.MOD_NOREPEAT;
         int maxScreens = Math.Min(9, Math.Max(1, monitorCount));
         for (int i = 1; i <= maxScreens; i++)
         {
             int hotkeyId = HOTKEY_INSTANT_BASE + i;
             uint vkKey = (uint)(0x30 + i); // 0x31 là VK_1, 0x32 là VK_2, ...
 
-            if (NativeMethods.RegisterHotKey(_hWnd, hotkeyId, modifiers, vkKey))
+            if (NativeMethods.RegisterHotKey(_hWnd, hotkeyId, instantMods, vkKey))
             {
                 _registeredIds.Add(hotkeyId);
             }
+        }
+    }
+
+    public void ReRegister(int? monitorCount = null)
+    {
+        if (_hWnd != nint.Zero)
+        {
+            nint hwnd = _hWnd;
+            Register(hwnd, monitorCount ?? _lastMonitorCount);
         }
     }
 

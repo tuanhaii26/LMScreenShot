@@ -4,45 +4,65 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:behaviors="clr-namespace:LMScreenShot.Core.Behaviors"
       mc:Ignorable="d"
       Title="{DynamicResource Loc_Shortcuts_Title}">
 
-    <Grid Margin="28,20,28,24">
-        <StackPanel>
-            <TextBlock Text="{DynamicResource Loc_Shortcuts_Title}" 
-                       FontSize="24" 
-                       FontWeight="Medium" 
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
-                       Margin="0,0,0,24" />
-            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
-                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
-                    BorderThickness="1" 
-                    CornerRadius="10" 
-                    Padding="20">
-                <StackPanel>
-                    <TextBlock Text="{DynamicResource Loc_Shortcuts_Header}" FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,16" />
-                    
-                    <DockPanel Margin="0,6">
-                        <TextBlock Text="Ctrl + Shift + X" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
-                        <TextBlock Text="{DynamicResource Loc_Shortcuts_OverlayDesc}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                    </DockPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" behaviors:SmoothScrollBehavior.IsEnabled="True">
+        <Grid Margin="28,20,28,24">
+            <StackPanel>
+                <TextBlock Text="{DynamicResource Loc_Shortcuts_Title}" 
+                           FontSize="24" 
+                           FontWeight="Medium" 
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                           Margin="0,0,0,24" />
+                <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                        BorderThickness="1" 
+                        CornerRadius="10" 
+                        Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Loc_Shortcuts_Header}" FontSize="14" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,16" />
+                        
+                        <DockPanel Margin="0,6">
+                            <TextBlock x:Name="TxtShortcutOverlay" Text="Ctrl + Shift + X" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
+                            <TextBlock Text="{DynamicResource Loc_Shortcuts_OverlayDesc}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                        </DockPanel>
 
-                    <DockPanel Margin="0,6">
-                        <TextBlock Text="Ctrl + Shift + `" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
-                        <TextBlock Text="{DynamicResource Loc_Shortcuts_IdentifyDesc}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                    </DockPanel>
+                        <DockPanel Margin="0,6">
+                            <TextBlock x:Name="TxtShortcutIdentify" Text="Ctrl + Shift + `" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
+                            <TextBlock Text="{DynamicResource Loc_Shortcuts_IdentifyDesc}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                        </DockPanel>
 
-                    <DockPanel Margin="0,6">
-                        <TextBlock Text="Ctrl + Shift + 1..9" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
-                        <TextBlock Text="{DynamicResource Loc_Shortcuts_InstantDesc}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                    </DockPanel>
+                        <DockPanel Margin="0,6">
+                            <TextBlock x:Name="TxtShortcutInstant" Text="Ctrl + Shift + 1..9" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
+                            <TextBlock Text="{DynamicResource Loc_Shortcuts_InstantDesc}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                        </DockPanel>
 
-                    <DockPanel Margin="0,6">
-                        <TextBlock Text="Esc" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
-                        <TextBlock Text="{DynamicResource Loc_Shortcuts_EscDesc}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                    </DockPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
-    </Grid>
+                        <DockPanel Margin="0,6">
+                            <TextBlock Text="Esc" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Width="160" />
+                            <TextBlock Text="{DynamicResource Loc_Shortcuts_EscDesc}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Nút Accent: Thay đổi phím tắt với Icon cây bút ngay bên trái -->
+                <ui:Button x:Name="BtnChangeShortcuts" 
+                           Appearance="Primary" 
+                           Height="38" 
+                           HorizontalAlignment="Left" 
+                           Margin="0,16,0,0" 
+                           Padding="18,0"
+                           Click="BtnChangeShortcuts_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="Edit20" Margin="0,0,8,0" />
+                        <TextBlock Text="{DynamicResource Loc_Home_ChangeShortcuts}" 
+                                   FontWeight="Medium" 
+                                   FontSize="13" 
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </ui:Button>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Page>

@@ -4,10 +4,11 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:behaviors="clr-namespace:LMScreenShot.Core.Behaviors"
       mc:Ignorable="d"
       Title="{DynamicResource Loc_About_Title}">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" behaviors:SmoothScrollBehavior.IsEnabled="True">
         <StackPanel Margin="28,20,28,28">
             <!-- 1. Page Title -->
             <TextBlock Text="{DynamicResource Loc_About_Title}" 
@@ -22,11 +23,11 @@
                        FontWeight="Medium" 
                        Margin="0,0,0,8" 
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-            <TextBlock Text="{DynamicResource Loc_About_Version}" 
+            <TextBlock x:Name="TxtVersion" 
                        FontSize="13" 
                        Margin="0,0,0,8" 
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-            <TextBlock Text="{DynamicResource Loc_About_Build}" 
+            <TextBlock x:Name="TxtBuild" 
                        FontSize="13" 
                        Margin="0,0,0,16" 
                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -43,7 +44,7 @@
             
             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                 <ui:HyperlinkButton Content="{DynamicResource Loc_About_GitHub}" 
-                                    NavigateUri="https://github.com" 
+                                    NavigateUri="https://github.com/tuanhaii26/LMScreenShot" 
                                     Margin="0,0,0,4" />
             </StackPanel>
 

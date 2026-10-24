@@ -4,6 +4,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:behaviors="clr-namespace:LMScreenShot.Core.Behaviors"
       mc:Ignorable="d"
       Title="{DynamicResource Loc_Gallery_Title}">
 
@@ -40,13 +41,14 @@
 
         <Border Grid.Row="1" 
                 Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
-                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                BorderThickness="1" 
                 CornerRadius="10" 
                 Padding="16">
             <ScrollViewer x:Name="ScrollGallery" 
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
+                          behaviors:SmoothScrollBehavior.IsEnabled="True"
                           SizeChanged="ScrollGallery_SizeChanged">
                 <WrapPanel x:Name="PanelGallery" />
             </ScrollViewer>

@@ -15,16 +15,17 @@
     <system:String x:Key="Loc_Home_AutoClipboard">Tự động sao chép vào bảng tạm</system:String>
     <system:String x:Key="Loc_Home_DetectedScreens">Đã phát hiện {0} màn hình. Nhấn vào màn hình để chụp nhanh.</system:String>
     <system:String x:Key="Loc_Home_ScanningScreens">Đang quét màn hình...</system:String>
+    <system:String x:Key="Loc_Home_ChangeShortcuts">Thay đổi phím tắt</system:String>
 
     <!-- Thư viện ảnh (GalleryPage) -->
-    <system:String x:Key="Loc_Gallery_Title">Ảnh chụp</system:String>
+    <system:String x:Key="Loc_Gallery_Title">Thư viện</system:String>
     <system:String x:Key="Loc_Gallery_Subtitle">Có thể kéo thả ảnh tới bất kì đâu cũng được!</system:String>
     <system:String x:Key="Loc_Gallery_OpenFolder">📁 Mở thư mục ảnh</system:String>
     <system:String x:Key="Loc_Gallery_Tooltip">Bấm đúp để mở • Giữ và kéo thả để đính kèm hoặc sao chép</system:String>
 
     <!-- Phím tắt (ShortcutsPage) -->
     <system:String x:Key="Loc_Shortcuts_Title">Phím tắt</system:String>
-    <system:String x:Key="Loc_Shortcuts_Header">Các phím tắt mặc định toàn hệ thống:</system:String>
+    <system:String x:Key="Loc_Shortcuts_Header">Phím tắt do người dùng cấu hình:</system:String>
     <system:String x:Key="Loc_Shortcuts_OverlayDesc">Mở giao diện chụp tương tác (click bất kỳ đâu trên màn hình hoặc ấn phím số 1..9 để chụp)</system:String>
     <system:String x:Key="Loc_Shortcuts_IdentifyDesc">Hiện số thứ tự nhận diện màn hình (Identify) không làm phiền (tự tắt sau 2.5s)</system:String>
     <system:String x:Key="Loc_Shortcuts_InstantDesc">Chụp tức thì màn hình tương ứng từ bất kỳ đâu trên Windows</system:String>
@@ -38,9 +39,31 @@
     <system:String x:Key="Loc_Settings_Theme">Chế độ giao diện (Dark / Light)</system:String>
     <system:String x:Key="Loc_Settings_ThemeDesc">Sử dụng giao diện màu tối hoặc màu sáng</system:String>
     <system:String x:Key="Loc_Settings_MinimizeToTray">Thu nhỏ xuống khay hệ thống</system:String>
-    <system:String x:Key="Loc_Settings_MinimizeToTrayDesc">Khi đóng hoặc thu nhỏ cửa sổ, ứng dụng sẽ tiếp tục chạy ẩn ở khay hệ thống</system:String>
+    <system:String x:Key="Loc_Settings_MinimizeToTrayDesc">Khi thu nhỏ cửa sổ, ứng dụng sẽ ẩn vào khay hệ thống</system:String>
+    <system:String x:Key="Loc_Settings_MinimizeOnClose">Thu nhỏ khi đóng cửa sổ</system:String>
+    <system:String x:Key="Loc_Settings_MinimizeOnCloseDesc">Khi nhấn nút đóng (X), ẩn ứng dụng xuống khay hệ thống thay vì thoát hoàn toàn</system:String>
+    <system:String x:Key="Loc_Settings_Startup">Khởi động cùng máy tính</system:String>
+    <system:String x:Key="Loc_Settings_StartupDesc">Tự động khởi chạy LMScreenShot khi máy tính khởi động</system:String>
+    <system:String x:Key="Loc_Settings_StartupOff">Tắt</system:String>
+    <system:String x:Key="Loc_Settings_StartupOn">Bật</system:String>
+    <system:String x:Key="Loc_Settings_StartupMinimized">Bật, thu nhỏ</system:String>
     <system:String x:Key="Loc_Settings_Language">Ngôn ngữ hiển thị (Language)</system:String>
     <system:String x:Key="Loc_Settings_LanguageDesc">Chọn ngôn ngữ hiển thị cho toàn bộ giao diện phần mềm</system:String>
+
+    <!-- Hộp thoại Thay đổi phím tắt (ContentDialog) -->
+    <system:String x:Key="Loc_Dialog_ShortcutsTitle">Thay đổi phím tắt</system:String>
+    <system:String x:Key="Loc_Dialog_OverlayCapture">Chụp tương tác (Mở giao diện chụp)</system:String>
+    <system:String x:Key="Loc_Dialog_Identify">Nhận diện màn hình (Identify)</system:String>
+    <system:String x:Key="Loc_Dialog_Instant">Chụp tức thì từng màn hình (1..9)</system:String>
+    <system:String x:Key="Loc_Dialog_InstantFixedNote">Phím số 1..9 được giữ nguyên theo từng màn hình, bạn có thể thay đổi các phím bổ trợ (Ctrl, Shift, Alt, Win).</system:String>
+    <system:String x:Key="Loc_Dialog_InstantKeysSuffix">+ Phím số [1..9]</system:String>
+    <system:String x:Key="Loc_Dialog_KeyBoxTooltip">Bấm vào ô này rồi nhấn một phím bất kỳ trên bàn phím của bạn</system:String>
+    <system:String x:Key="Loc_Dialog_Save">Lưu thay đổi</system:String>
+    <system:String x:Key="Loc_Dialog_Cancel">Huỷ</system:String>
+    <system:String x:Key="Loc_Dialog_Reset">Mặc định</system:String>
+    <system:String x:Key="Loc_Dialog_ErrorNoModifier">Vui lòng chọn ít nhất một phím bổ trợ (Ctrl, Shift, Alt hoặc Win) cho mỗi phím tắt!</system:String>
+    <system:String x:Key="Loc_Dialog_ErrorConflict">Phím tắt chụp tương tác và nhận diện màn hình không được trùng nhau!</system:String>
+    <system:String x:Key="Loc_Dialog_ErrorNoNumberKeys">Không thể dùng phím số để tránh xung đột với phím tắt chụp màn hình [1..9]!</system:String>
 
     <!-- Tray Icon -->
     <system:String x:Key="Loc_Tray_Tooltip">LMScreenShot - Nhấp chuột để chụp nhanh (Ctrl + Shift + X)</system:String>
@@ -49,8 +72,8 @@
 
     <!-- Thông tin (AboutPage) -->
     <system:String x:Key="Loc_About_Title">Thông tin</system:String>
-    <system:String x:Key="Loc_About_Version">Phiên bản 1.0.0</system:String>
-    <system:String x:Key="Loc_About_Build">Bản dựng 20261024</system:String>
+    <system:String x:Key="Loc_About_Version">Phiên bản {0}</system:String>
+    <system:String x:Key="Loc_About_Build">Bản dựng {0}</system:String>
     <system:String x:Key="Loc_About_Links">Liên kết</system:String>
     <system:String x:Key="Loc_About_GitHub">Dự án LMScreenShot trên GitHub</system:String>
     <system:String x:Key="Loc_About_ThirdParty">Thư viện bên thứ ba</system:String>

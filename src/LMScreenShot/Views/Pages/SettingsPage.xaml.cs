@@ -1,8 +1,10 @@
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using LMScreenShot.Core.Config;
 using LMScreenShot.Core.Localization;
+using LMScreenShot.Core.Utils;
 using Wpf.Ui.Appearance;
 
 namespace LMScreenShot.Views.Pages;
@@ -25,11 +27,26 @@ public partial class SettingsPage : Page
 
         TxtFolderPath.Text = config.ResolvedSavePath;
         ToggleMinimizeToTray.IsChecked = config.MinimizeToTray == 1;
+        ToggleMinimizeOnClose.IsChecked = config.MinimizeOnClose == 1;
         ToggleDarkMode.IsChecked = config.IsDarkMode == 1;
 
+        ComboStartup.SelectedIndex = Math.Clamp(config.Startup, 0, 2);
         ComboLanguage.SelectedIndex = config.Lang == "en" ? 1 : 0;
 
         _isInitializing = false;
+    }
+
+    private void ComboStartup_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isInitializing) return;
+
+        int selected = ComboStartup.SelectedIndex;
+        if (selected >= 0 && selected <= 2)
+        {
+            AppConfig.Instance.Startup = selected;
+            AppConfig.Instance.Save();
+            StartupManager.ApplyStartup(selected);
+        }
     }
 
     private void ComboLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -65,6 +82,12 @@ public partial class SettingsPage : Page
     private void ToggleMinimizeToTray_Click(object sender, RoutedEventArgs e)
     {
         AppConfig.Instance.MinimizeToTray = ToggleMinimizeToTray.IsChecked == true ? 1 : 0;
+        AppConfig.Instance.Save();
+    }
+
+    private void ToggleMinimizeOnClose_Click(object sender, RoutedEventArgs e)
+    {
+        AppConfig.Instance.MinimizeOnClose = ToggleMinimizeOnClose.IsChecked == true ? 1 : 0;
         AppConfig.Instance.Save();
     }
 

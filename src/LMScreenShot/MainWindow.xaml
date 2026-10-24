@@ -211,5 +211,209 @@
                 <Frame x:Name="RootFrame" NavigationUIVisibility="Hidden" Navigated="RootFrame_Navigated" />
             </Border>
         </Grid>
+
+        <!-- MODAL CONTENT DIALOG: THAY ĐỔI PHÍM TẮT -->
+        <Grid x:Name="OverlayDialogContainer" 
+              Grid.RowSpan="2" 
+              Background="#70000000" 
+              Visibility="Collapsed"
+              MouseDown="OverlayDialogContainer_MouseDown">
+            <Border x:Name="DialogCardBorder"
+                    Width="530" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource SolidBackgroundFillColorBaseBrush}" 
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                    BorderThickness="1" 
+                    CornerRadius="12" 
+                    Padding="24,20"
+                    MouseDown="DialogCardBorder_MouseDown">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="32" ShadowDepth="8" Opacity="0.45" Color="#000000" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <DockPanel Grid.Row="0" Margin="0,0,0,16">
+                        <ui:Button x:Name="BtnDialogCloseTop" 
+                                   Appearance="Transparent" 
+                                   Padding="6" 
+                                   DockPanel.Dock="Right" 
+                                   VerticalAlignment="Center"
+                                   Click="BtnDialogCancel_Click">
+                            <ui:SymbolIcon Symbol="Dismiss16" />
+                        </ui:Button>
+                        <TextBlock Text="{DynamicResource Loc_Dialog_ShortcutsTitle}" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                                   VerticalAlignment="Center" />
+                    </DockPanel>
+
+                    <!-- Body: 3 Cards for 3 Hotkeys -->
+                    <StackPanel Grid.Row="1">
+                        <!-- 1. Chụp tương tác -->
+                        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="8" 
+                                Padding="14,10" 
+                                Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" 
+                                           Text="{DynamicResource Loc_Dialog_OverlayCapture}" 
+                                           FontWeight="SemiBold" 
+                                           FontSize="13" 
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                                           Margin="0,0,0,8" />
+                                <WrapPanel Grid.Row="1" VerticalAlignment="Center">
+                                    <CheckBox x:Name="ChkOverlayCtrl" Content="Ctrl" Margin="0,0,12,0" IsChecked="True" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <CheckBox x:Name="ChkOverlayShift" Content="Shift" Margin="0,0,12,0" IsChecked="True" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <CheckBox x:Name="ChkOverlayAlt" Content="Alt" Margin="0,0,12,0" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <CheckBox x:Name="ChkOverlayWin" Content="Win" Margin="0,0,16,0" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <TextBlock Text="+" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                    <TextBox x:Name="TxtOverlayKey" 
+                                             Width="96" 
+                                             Height="32" 
+                                             Text="X" 
+                                             TextAlignment="Center" 
+                                             VerticalContentAlignment="Center" 
+                                             FontWeight="SemiBold" 
+                                             FontSize="13" 
+                                             IsReadOnly="True" 
+                                             Cursor="Hand" 
+                                             Background="{DynamicResource ControlFillColorDefaultBrush}" 
+                                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" 
+                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                                             ToolTip="{DynamicResource Loc_Dialog_KeyBoxTooltip}" 
+                                             PreviewKeyDown="KeyTextBox_PreviewKeyDown" 
+                                             GotFocus="KeyTextBox_GotFocus" 
+                                             LostFocus="KeyTextBox_LostFocus" />
+                                </WrapPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- 2. Nhận diện màn hình (Identify) -->
+                        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="8" 
+                                Padding="14,10" 
+                                Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" 
+                                           Text="{DynamicResource Loc_Dialog_Identify}" 
+                                           FontWeight="SemiBold" 
+                                           FontSize="13" 
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                                           Margin="0,0,0,8" />
+                                <WrapPanel Grid.Row="1" VerticalAlignment="Center">
+                                    <CheckBox x:Name="ChkIdentifyCtrl" Content="Ctrl" Margin="0,0,12,0" IsChecked="True" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <CheckBox x:Name="ChkIdentifyShift" Content="Shift" Margin="0,0,12,0" IsChecked="True" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <CheckBox x:Name="ChkIdentifyAlt" Content="Alt" Margin="0,0,12,0" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <CheckBox x:Name="ChkIdentifyWin" Content="Win" Margin="0,0,16,0" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <TextBlock Text="+" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                    <TextBox x:Name="TxtIdentifyKey" 
+                                             Width="96" 
+                                             Height="32" 
+                                             Text="`" 
+                                             TextAlignment="Center" 
+                                             VerticalContentAlignment="Center" 
+                                             FontWeight="SemiBold" 
+                                             FontSize="13" 
+                                             IsReadOnly="True" 
+                                             Cursor="Hand" 
+                                             Background="{DynamicResource ControlFillColorDefaultBrush}" 
+                                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" 
+                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                                             ToolTip="{DynamicResource Loc_Dialog_KeyBoxTooltip}" 
+                                             PreviewKeyDown="KeyTextBox_PreviewKeyDown" 
+                                             GotFocus="KeyTextBox_GotFocus" 
+                                             LostFocus="KeyTextBox_LostFocus" />
+                                </WrapPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- 3. Chụp tức thì từng màn hình (Instant Capture) -->
+                        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="8" 
+                                Padding="14,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" 
+                                           Text="{DynamicResource Loc_Dialog_Instant}" 
+                                           FontWeight="SemiBold" 
+                                           FontSize="13" 
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                                           Margin="0,0,0,4" />
+                                <TextBlock Grid.Row="1" 
+                                           Text="{DynamicResource Loc_Dialog_InstantFixedNote}" 
+                                           FontSize="11.5" 
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                           Margin="0,0,0,8" 
+                                           TextWrapping="Wrap" />
+                                <WrapPanel Grid.Row="2" VerticalAlignment="Center">
+                                    <CheckBox x:Name="ChkInstantCtrl" Content="Ctrl" Margin="0,0,12,0" IsChecked="True" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <CheckBox x:Name="ChkInstantShift" Content="Shift" Margin="0,0,12,0" IsChecked="True" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <CheckBox x:Name="ChkInstantAlt" Content="Alt" Margin="0,0,12,0" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <CheckBox x:Name="ChkInstantWin" Content="Win" Margin="0,0,16,0" Checked="HotkeyField_Changed" Unchecked="HotkeyField_Changed" />
+                                    <TextBlock Text="{DynamicResource Loc_Dialog_InstantKeysSuffix}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                </WrapPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Error Info Text -->
+                    <TextBlock x:Name="TxtDialogError" 
+                               Grid.Row="2" 
+                               FontSize="12" 
+                               Foreground="#FF5555" 
+                               Margin="0,8,0,0" 
+                               Visibility="Collapsed" 
+                               TextWrapping="Wrap" />
+
+                    <!-- Footer Action Buttons -->
+                    <DockPanel Grid.Row="3" Margin="0,16,0,0">
+                        <ui:Button x:Name="BtnDialogReset" 
+                                   Appearance="Secondary" 
+                                   Content="{DynamicResource Loc_Dialog_Reset}" 
+                                   DockPanel.Dock="Left" 
+                                   Click="BtnDialogReset_Click" />
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <ui:Button x:Name="BtnDialogCancel" 
+                                       Appearance="Secondary" 
+                                       Content="{DynamicResource Loc_Dialog_Cancel}" 
+                                       Margin="0,0,10,0" 
+                                       Click="BtnDialogCancel_Click" />
+                            <ui:Button x:Name="BtnDialogSave" 
+                                       Appearance="Primary" 
+                                       Content="{DynamicResource Loc_Dialog_Save}" 
+                                       Click="BtnDialogSave_Click" />
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </ui:FluentWindow>

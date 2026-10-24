@@ -15,16 +15,17 @@
     <system:String x:Key="Loc_Home_AutoClipboard">Auto copy to clipboard</system:String>
     <system:String x:Key="Loc_Home_DetectedScreens">Detected {0} screens. Click on a screen to capture quickly.</system:String>
     <system:String x:Key="Loc_Home_ScanningScreens">Scanning screens...</system:String>
+    <system:String x:Key="Loc_Home_ChangeShortcuts">Change shortcuts</system:String>
 
     <!-- Thư viện ảnh (GalleryPage) -->
     <system:String x:Key="Loc_Gallery_Title">Gallery</system:String>
-    <system:String x:Key="Loc_Gallery_Subtitle">You can drag and drop images anywhere!</system:String>
+    <system:String x:Key="Loc_Gallery_Subtitle">You can drag and drop images to anywhere!</system:String>
     <system:String x:Key="Loc_Gallery_OpenFolder">📁 Open folder</system:String>
     <system:String x:Key="Loc_Gallery_Tooltip">Double-click to open • Hold and drag to attach or copy</system:String>
 
     <!-- Phím tắt (ShortcutsPage) -->
     <system:String x:Key="Loc_Shortcuts_Title">Shortcuts</system:String>
-    <system:String x:Key="Loc_Shortcuts_Header">Default system-wide shortcuts:</system:String>
+    <system:String x:Key="Loc_Shortcuts_Header">User configured shortcuts:</system:String>
     <system:String x:Key="Loc_Shortcuts_OverlayDesc">Open interactive capture overlay (click anywhere on screen or press 1..9 to capture)</system:String>
     <system:String x:Key="Loc_Shortcuts_IdentifyDesc">Show screen identification overlay (auto-dismiss after 2.5s)</system:String>
     <system:String x:Key="Loc_Shortcuts_InstantDesc">Instant capture corresponding screen from anywhere on Windows</system:String>
@@ -38,9 +39,31 @@
     <system:String x:Key="Loc_Settings_Theme">Theme mode (Dark / Light)</system:String>
     <system:String x:Key="Loc_Settings_ThemeDesc">Use dark or light color theme</system:String>
     <system:String x:Key="Loc_Settings_MinimizeToTray">Minimize to system tray</system:String>
-    <system:String x:Key="Loc_Settings_MinimizeToTrayDesc">When closing or minimizing, keep LMScreenShot running silently in system tray</system:String>
+    <system:String x:Key="Loc_Settings_MinimizeToTrayDesc">When minimizing the window, keep LMScreenShot running silently in system tray</system:String>
+    <system:String x:Key="Loc_Settings_MinimizeOnClose">Minimize on close</system:String>
+    <system:String x:Key="Loc_Settings_MinimizeOnCloseDesc">When clicking the close button (X), hide to system tray instead of completely exiting</system:String>
+    <system:String x:Key="Loc_Settings_Startup">Start with Windows</system:String>
+    <system:String x:Key="Loc_Settings_StartupDesc">Automatically run LMScreenShot when your computer boots up</system:String>
+    <system:String x:Key="Loc_Settings_StartupOff">Disabled</system:String>
+    <system:String x:Key="Loc_Settings_StartupOn">Enabled</system:String>
+    <system:String x:Key="Loc_Settings_StartupMinimized">Enabled, minimized</system:String>
     <system:String x:Key="Loc_Settings_Language">Language</system:String>
     <system:String x:Key="Loc_Settings_LanguageDesc">Choose the display language for the application interface</system:String>
+
+    <!-- Hộp thoại Thay đổi phím tắt (ContentDialog) -->
+    <system:String x:Key="Loc_Dialog_ShortcutsTitle">Change Shortcuts</system:String>
+    <system:String x:Key="Loc_Dialog_OverlayCapture">Interactive Capture (Open overlay)</system:String>
+    <system:String x:Key="Loc_Dialog_Identify">Identify Screens</system:String>
+    <system:String x:Key="Loc_Dialog_Instant">Instant Screen Capture (1..9)</system:String>
+    <system:String x:Key="Loc_Dialog_InstantFixedNote">Number keys 1..9 are fixed per display. You can customize the modifier keys (Ctrl, Shift, Alt, Win).</system:String>
+    <system:String x:Key="Loc_Dialog_InstantKeysSuffix">+ Number keys [1..9]</system:String>
+    <system:String x:Key="Loc_Dialog_KeyBoxTooltip">Click this box and press any key on your keyboard</system:String>
+    <system:String x:Key="Loc_Dialog_Save">Save Changes</system:String>
+    <system:String x:Key="Loc_Dialog_Cancel">Cancel</system:String>
+    <system:String x:Key="Loc_Dialog_Reset">Default</system:String>
+    <system:String x:Key="Loc_Dialog_ErrorNoModifier">Please select at least one modifier key (Ctrl, Shift, Alt or Win) for each shortcut!</system:String>
+    <system:String x:Key="Loc_Dialog_ErrorConflict">Interactive capture and Identify shortcuts cannot be identical!</system:String>
+    <system:String x:Key="Loc_Dialog_ErrorNoNumberKeys">Number keys cannot be used to prevent conflicts with screen capture shortcuts [1..9]!</system:String>
 
     <!-- Tray Icon -->
     <system:String x:Key="Loc_Tray_Tooltip">LMScreenShot - Click to capture (Ctrl + Shift + X)</system:String>
@@ -49,8 +72,8 @@
 
     <!-- Thông tin (AboutPage) -->
     <system:String x:Key="Loc_About_Title">About</system:String>
-    <system:String x:Key="Loc_About_Version">Version 1.0.0</system:String>
-    <system:String x:Key="Loc_About_Build">Build 20261024</system:String>
+    <system:String x:Key="Loc_About_Version">Version {0}</system:String>
+    <system:String x:Key="Loc_About_Build">Build {0}</system:String>
     <system:String x:Key="Loc_About_Links">Links</system:String>
     <system:String x:Key="Loc_About_GitHub">LMScreenShot project on GitHub</system:String>
     <system:String x:Key="Loc_About_ThirdParty">Third-party libraries</system:String>
@@ -59,7 +82,7 @@
     <system:String x:Key="Loc_Overlay_Tip">Click anywhere or press number key to capture | Esc to cancel</system:String>
     <system:String x:Key="Loc_Toast_Captured">Captured {0}</system:String>
     <system:String x:Key="Loc_Toast_SavedAndCopied">Saved to folder and copied to clipboard!</system:String>
-    <system:String x:Key="Loc_Toast_SavedOnly">Saved image to Screenshots folder!</system:String>
+    <system:String x:Key="Loc_Toast_SavedOnly">Saved image to folder!</system:String>
     <system:String x:Key="Loc_Toast_CopiedOnly">Copied image to clipboard!</system:String>
     <system:String x:Key="Loc_Toast_CaptureError">Capture Error</system:String>
     <system:String x:Key="Loc_Monitor_Primary"> (Primary)</system:String>
