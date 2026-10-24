@@ -21,14 +21,14 @@
     <system:String x:Key="Loc_Gallery_Title">Gallery</system:String>
     <system:String x:Key="Loc_Gallery_Subtitle">You can drag and drop images to anywhere!</system:String>
     <system:String x:Key="Loc_Gallery_OpenFolder">📁 Open folder</system:String>
-    <system:String x:Key="Loc_Gallery_Tooltip">Double-click to open • Hold and drag to attach or copy</system:String>
+    <system:String x:Key="Loc_Gallery_Tooltip">Double-click to open. Hold and drag to attach or copy</system:String>
 
     <!-- Phím tắt (ShortcutsPage) -->
     <system:String x:Key="Loc_Shortcuts_Title">Shortcuts</system:String>
     <system:String x:Key="Loc_Shortcuts_Header">User configured shortcuts:</system:String>
     <system:String x:Key="Loc_Shortcuts_OverlayDesc">Open interactive capture overlay (click anywhere on screen or press 1..9 to capture)</system:String>
-    <system:String x:Key="Loc_Shortcuts_IdentifyDesc">Show screen identification overlay (auto-dismiss after 2.5s)</system:String>
-    <system:String x:Key="Loc_Shortcuts_InstantDesc">Instant capture corresponding screen from anywhere on Windows</system:String>
+    <system:String x:Key="Loc_Shortcuts_IdentifyDesc">Show screen identification numbers (auto-dismiss after 2.5s)</system:String>
+    <system:String x:Key="Loc_Shortcuts_InstantDesc">Instant capture corresponding screen</system:String>
     <system:String x:Key="Loc_Shortcuts_EscDesc">Close / Cancel interactive capture overlay and return to main window</system:String>
 
     <!-- Cài đặt (SettingsPage) -->
@@ -36,14 +36,14 @@
     <system:String x:Key="Loc_Settings_DefaultFolder">Default screenshot folder</system:String>
     <system:String x:Key="Loc_Settings_DefaultFolderDesc">Directory path where screenshots are automatically saved</system:String>
     <system:String x:Key="Loc_Settings_ChangeFolder">Change...</system:String>
-    <system:String x:Key="Loc_Settings_Theme">Theme mode (Dark / Light)</system:String>
-    <system:String x:Key="Loc_Settings_ThemeDesc">Use dark or light color theme</system:String>
+    <system:String x:Key="Loc_Settings_Theme">Dark theme mode</system:String>
+    <system:String x:Key="Loc_Settings_ThemeDesc">Deploying Flashbang!</system:String>
     <system:String x:Key="Loc_Settings_MinimizeToTray">Minimize to system tray</system:String>
     <system:String x:Key="Loc_Settings_MinimizeToTrayDesc">When minimizing the window, keep LMScreenShot running silently in system tray</system:String>
     <system:String x:Key="Loc_Settings_MinimizeOnClose">Minimize on close</system:String>
     <system:String x:Key="Loc_Settings_MinimizeOnCloseDesc">When clicking the close button (X), hide to system tray instead of completely exiting</system:String>
     <system:String x:Key="Loc_Settings_Startup">Start with Windows</system:String>
-    <system:String x:Key="Loc_Settings_StartupDesc">Automatically run LMScreenShot when your computer boots up</system:String>
+    <system:String x:Key="Loc_Settings_StartupDesc">Automatically run application when your computer boots up</system:String>
     <system:String x:Key="Loc_Settings_StartupOff">Disabled</system:String>
     <system:String x:Key="Loc_Settings_StartupOn">Enabled</system:String>
     <system:String x:Key="Loc_Settings_StartupMinimized">Enabled, minimized</system:String>
@@ -75,7 +75,7 @@
     <system:String x:Key="Loc_About_Version">Version {0}</system:String>
     <system:String x:Key="Loc_About_Build">Build {0}</system:String>
     <system:String x:Key="Loc_About_Links">Links</system:String>
-    <system:String x:Key="Loc_About_GitHub">LMScreenShot project on GitHub</system:String>
+    <system:String x:Key="Loc_About_GitHub">Project on GitHub</system:String>
     <system:String x:Key="Loc_About_ThirdParty">Third-party libraries</system:String>
 
     <!-- Overlay & Toast Notifications -->

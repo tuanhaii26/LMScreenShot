@@ -4,7 +4,7 @@
 
     <!-- Navigation Rail -->
     <system:String x:Key="Loc_Nav_Home">Trang chủ</system:String>
-    <system:String x:Key="Loc_Nav_Gallery">Ảnh chụp</system:String>
+    <system:String x:Key="Loc_Nav_Gallery">Thư viện</system:String>
     <system:String x:Key="Loc_Nav_Shortcuts">Phím tắt</system:String>
     <system:String x:Key="Loc_Nav_Settings">Cài đặt</system:String>
     <system:String x:Key="Loc_Nav_About">Thông tin</system:String>
@@ -21,14 +21,14 @@
     <system:String x:Key="Loc_Gallery_Title">Thư viện</system:String>
     <system:String x:Key="Loc_Gallery_Subtitle">Có thể kéo thả ảnh tới bất kì đâu cũng được!</system:String>
     <system:String x:Key="Loc_Gallery_OpenFolder">📁 Mở thư mục ảnh</system:String>
-    <system:String x:Key="Loc_Gallery_Tooltip">Bấm đúp để mở • Giữ và kéo thả để đính kèm hoặc sao chép</system:String>
+    <system:String x:Key="Loc_Gallery_Tooltip">Bấm đúp để mở. Giữ và kéo thả để đính kèm hoặc sao chép</system:String>
 
     <!-- Phím tắt (ShortcutsPage) -->
     <system:String x:Key="Loc_Shortcuts_Title">Phím tắt</system:String>
     <system:String x:Key="Loc_Shortcuts_Header">Phím tắt do người dùng cấu hình:</system:String>
     <system:String x:Key="Loc_Shortcuts_OverlayDesc">Mở giao diện chụp tương tác (click bất kỳ đâu trên màn hình hoặc ấn phím số 1..9 để chụp)</system:String>
-    <system:String x:Key="Loc_Shortcuts_IdentifyDesc">Hiện số thứ tự nhận diện màn hình (Identify) không làm phiền (tự tắt sau 2.5s)</system:String>
-    <system:String x:Key="Loc_Shortcuts_InstantDesc">Chụp tức thì màn hình tương ứng từ bất kỳ đâu trên Windows</system:String>
+    <system:String x:Key="Loc_Shortcuts_IdentifyDesc">Hiện số thứ tự nhận diện màn hình (tự động ẩn sau 2.5s)</system:String>
+    <system:String x:Key="Loc_Shortcuts_InstantDesc">Chụp tức thì màn hình tương ứng</system:String>
     <system:String x:Key="Loc_Shortcuts_EscDesc">Đóng / Huỷ giao diện chụp tương tác và quay lại cửa sổ chính</system:String>
 
     <!-- Cài đặt (SettingsPage) -->
@@ -36,14 +36,14 @@
     <system:String x:Key="Loc_Settings_DefaultFolder">Thư mục lưu ảnh mặc định</system:String>
     <system:String x:Key="Loc_Settings_DefaultFolderDesc">Đường dẫn thư mục lưu ảnh chụp màn hình tự động</system:String>
     <system:String x:Key="Loc_Settings_ChangeFolder">Thay đổi...</system:String>
-    <system:String x:Key="Loc_Settings_Theme">Chế độ giao diện (Dark / Light)</system:String>
-    <system:String x:Key="Loc_Settings_ThemeDesc">Sử dụng giao diện màu tối hoặc màu sáng</system:String>
+    <system:String x:Key="Loc_Settings_Theme">Chế độ giao diện tối</system:String>
+    <system:String x:Key="Loc_Settings_ThemeDesc">Deploying Flashbang!</system:String>
     <system:String x:Key="Loc_Settings_MinimizeToTray">Thu nhỏ xuống khay hệ thống</system:String>
     <system:String x:Key="Loc_Settings_MinimizeToTrayDesc">Khi thu nhỏ cửa sổ, ứng dụng sẽ ẩn vào khay hệ thống</system:String>
     <system:String x:Key="Loc_Settings_MinimizeOnClose">Thu nhỏ khi đóng cửa sổ</system:String>
     <system:String x:Key="Loc_Settings_MinimizeOnCloseDesc">Khi nhấn nút đóng (X), ẩn ứng dụng xuống khay hệ thống thay vì thoát hoàn toàn</system:String>
-    <system:String x:Key="Loc_Settings_Startup">Khởi động cùng máy tính</system:String>
-    <system:String x:Key="Loc_Settings_StartupDesc">Tự động khởi chạy LMScreenShot khi máy tính khởi động</system:String>
+    <system:String x:Key="Loc_Settings_Startup">Khởi động cùng Windows</system:String>
+    <system:String x:Key="Loc_Settings_StartupDesc">Tự động khởi chạy ứng dụng khi máy tính khởi động</system:String>
     <system:String x:Key="Loc_Settings_StartupOff">Tắt</system:String>
     <system:String x:Key="Loc_Settings_StartupOn">Bật</system:String>
     <system:String x:Key="Loc_Settings_StartupMinimized">Bật, thu nhỏ</system:String>
@@ -75,14 +75,14 @@
     <system:String x:Key="Loc_About_Version">Phiên bản {0}</system:String>
     <system:String x:Key="Loc_About_Build">Bản dựng {0}</system:String>
     <system:String x:Key="Loc_About_Links">Liên kết</system:String>
-    <system:String x:Key="Loc_About_GitHub">Dự án LMScreenShot trên GitHub</system:String>
+    <system:String x:Key="Loc_About_GitHub">Dự án trên GitHub</system:String>
     <system:String x:Key="Loc_About_ThirdParty">Thư viện bên thứ ba</system:String>
 
     <!-- Overlay & Toast Notifications -->
     <system:String x:Key="Loc_Overlay_Tip">Click chuột bất kỳ đâu hoặc bấm phím số tương ứng để chụp | Esc để huỷ</system:String>
     <system:String x:Key="Loc_Toast_Captured">Đã chụp {0}</system:String>
     <system:String x:Key="Loc_Toast_SavedAndCopied">Đã lưu vào thư mục và sao chép vào bảng tạm!</system:String>
-    <system:String x:Key="Loc_Toast_SavedOnly">Đã lưu ảnh vào thư mục Screenshots!</system:String>
+    <system:String x:Key="Loc_Toast_SavedOnly">Đã lưu ảnh vào thư mục!</system:String>
     <system:String x:Key="Loc_Toast_CopiedOnly">Đã sao chép ảnh vào bảng tạm!</system:String>
     <system:String x:Key="Loc_Toast_CaptureError">Lỗi chụp màn hình</system:String>
     <system:String x:Key="Loc_Monitor_Primary"> (Chính)</system:String>

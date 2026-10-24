@@ -198,8 +198,12 @@ public partial class MainWindow : FluentWindow
         bool wasVisible = this.Visibility == Visibility.Visible && this.WindowState != WindowState.Minimized;
 
         // Ẩn tạm thời cửa sổ chính nếu đang mở
-        this.Hide();
+        if (wasVisible)
+        {
+            this.Hide();
+        }
 
+        bool isHandled = false;
         var monitors = ScreenCapturer.GetMonitors();
         foreach (var monitor in monitors)
         {
@@ -207,22 +211,41 @@ public partial class MainWindow : FluentWindow
 
             overlay.CaptureTriggered += async (targetMon) =>
             {
+                if (isHandled) return;
+                isHandled = true;
+
                 CloseAllOverlays();
                 await _homePage.ExecuteCaptureAsync(targetMon);
+
+                if (wasVisible)
+                {
+                    ShowAndRestore();
+                }
             };
 
             overlay.NumberKeyTriggered += async (num) =>
             {
+                if (isHandled) return;
+
                 var targetMon = monitors.FirstOrDefault(m => m.DisplayNumber == num);
                 if (targetMon != null)
                 {
+                    isHandled = true;
                     CloseAllOverlays();
                     await _homePage.ExecuteCaptureAsync(targetMon);
+
+                    if (wasVisible)
+                    {
+                        ShowAndRestore();
+                    }
                 }
             };
 
             overlay.CancelTriggered += () =>
             {
+                if (isHandled) return;
+                isHandled = true;
+
                 CloseAllOverlays();
                 if (wasVisible)
                 {
