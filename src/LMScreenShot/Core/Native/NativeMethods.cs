@@ -205,6 +205,7 @@ public static class NativeMethods
     public static extern int SetWindowLong(nint hWnd, int nIndex, int dwNewLong);
 
     public static readonly nint HWND_TOPMOST = new(-1);
+    public static readonly nint HWND_BROADCAST = new(0xffff);
     public const uint SWP_SHOWWINDOW = 0x0040;
     public const uint SWP_NOACTIVATE = 0x0010;
 
@@ -213,6 +214,12 @@ public static class NativeMethods
 
     [DllImport("user32.dll")]
     public static extern bool SetForegroundWindow(nint hWnd);
+
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    public static extern uint RegisterWindowMessage(string lpString);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern bool PostMessage(nint hWnd, uint Msg, nint wParam, nint lParam);
 
     // Shell NotifyIcon APIs
     public const int NIM_ADD = 0x00000000;

@@ -93,8 +93,11 @@ public partial class MainWindow : FluentWindow
         // 3. Khởi tạo khay hệ thống (System Tray)
         _trayManager.Initialize(this);
 
-        // 4. Đăng ký phím tắt toàn hệ thống
+        // 4. Đăng ký phím tắt toàn hệ thống & Hook nhận thông điệp Single Instance
         var helper = new WindowInteropHelper(this);
+        var source = HwndSource.FromHwnd(helper.Handle);
+        source?.AddHook(WndProc);
+
         _hotkeyManager.Register(helper.Handle, ScreenCapturer.GetMonitors().Count);
         _hotkeyManager.CaptureOverlayRequested += OpenCaptureOverlay;
         _hotkeyManager.IdentifyOverlayRequested += OpenIdentifyOverlay;
@@ -106,6 +109,17 @@ public partial class MainWindow : FluentWindow
             WindowState = WindowState.Minimized;
             Hide();
         }
+    }
+
+    private nint WndProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
+    {
+        if (msg == App.WM_SHOWME)
+        {
+            ShowAndRestore();
+            NativeMethods.SetForegroundWindow(hwnd);
+            handled = true;
+        }
+        return nint.Zero;
     }
 
     private void MainWindow_Closed(object? sender, EventArgs e)

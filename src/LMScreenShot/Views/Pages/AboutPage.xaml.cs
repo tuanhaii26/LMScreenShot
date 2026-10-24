@@ -39,7 +39,11 @@ public partial class AboutPage : Page
 
         try
         {
-            var path = Environment.ProcessPath ?? assembly.Location;
+            var path = Environment.ProcessPath;
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                path = Path.Combine(AppContext.BaseDirectory, "LMScreenShot.exe");
+            }
             if (!string.IsNullOrEmpty(path) && File.Exists(path))
             {
                 _buildStr = File.GetLastWriteTime(path).ToString("yyyyMMdd");
